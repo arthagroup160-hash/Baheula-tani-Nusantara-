@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dokumen Internal — BTN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0a0a0a;
+  font-family: 'Crimson Pro', Georgia, serif;
+  min-height: 100vh;
+}
+
+/* ===== LOCK SCREEN ===== */
+#lock-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #0a0800, #050400, #080600);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+}
+
+.lock-box {
+  width: 100%;
+  max-width: 340px;
+  background: linear-gradient(160deg, #1a1500, #100e00);
+  border: 2px solid #b8860b;
+  border-radius: 8px;
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(184,134,11,0.2);
+  position: relative;
+}
+
+.lock-sudut { position: absolute; width: 24px; height: 24px; }
+.lock-sudut.tl { top:8px; left:8px; border-top:1px solid #d4a017; border-left:1px solid #d4a017; }
+.lock-sudut.tr { top:8px; right:8px; border-top:1px solid #d4a017; border-right:1px solid #d4a017; }
+.lock-sudut.bl { bottom:8px; left:8px; border-bottom:1px solid #d4a017; border-left:1px solid #d4a017; }
+.lock-sudut.br { bottom:8px; right:8px; border-bottom:1px solid #d4a017; border-right:1px solid #d4a017; }
+
+.lock-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.lock-title {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #d4a017;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+
+.lock-sub {
+  font-size: 11px;
+  color: #7a5c00;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.lock-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #8a6000;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.lock-input {
+  width: 100%;
+  background: rgba(184,134,11,0.06);
+  border: 1px solid #5a4000;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  color: #d4a017;
+  letter-spacing: 4px;
+  text-align: center;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.3s;
+}
+
+.lock-input:focus { border-color: #b8860b; }
+.lock-input::placeholder { color: #3a2a00; letter-spacing: 2px; font-size: 12px; }
+
+.lock-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #b8860b, #d4a017);
+  color: #0a0800;
+  border: none;
+  padding: 13px;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.lock-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(184,134,11,0.4); }
+
+.lock-error {
+  color: #c05050;
+  font-size: 12px;
+  margin-top: 10px;
+  font-style: italic;
+  min-height: 18px;
+  display: none;
+}
+
+.lock-error.show { display: block; }
+
+/* ===== KONTEN UTAMA ===== */
+#main-content {
+  display: none;
+  background: #111;
+  padding: 30px 16px 60px;
+}
+
+#main-content.unlocked { display: block; }
+
+/* Header halaman internal */
+.internal-header {
+  max-width: 560px;
+  margin: 0 auto 40px;
+  text-align: center;
+  padding: 28px 24px;
+  background: linear-gradient(160deg, #1a1500, #100e00);
+  border: 2px solid #b8860b;
+  border-radius: 8px;
+  box-shadow: 0 0 40px rgba(184,134,11,0.15);
+}
+
+.internal-header .ih-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #8a6000;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.internal-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #d4a017;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+
+.internal-header p {
+  font-size: 12px;
+  color: #7a5c00;
+  font-style: italic;
+}
+
+/* Nav dokumen */
+.dok-nav {
+  max-width: 560px;
+  margin: 0 auto 36px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.dok-nav-btn {
+  background: rgba(184,134,11,0.08);
+  border: 1px solid rgba(184,134,11,0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #b8860b;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.dok-nav-btn:hover {
+  background: rgba(184,134,11,0.15);
+  border-color: #b8860b;
+  transform: translateY(-2px);
+}
+
+/* Section label */
+.section-label {
+  max-width: 560px;
+  margin: 48px auto 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before, .section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #5a4000);
+}
+
+.section-label::after {
+  background: linear-gradient(to left, transparent, #5a4000);
+}
+
+.section-label span {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #7a5c00;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Wrapper tiap dokumen */
+.dok-wrapper {
+  max-width: 560px;
+  margin: 0 auto 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tombol cetak per dokumen */
+.btn-cetak-dok {
+  margin-top: 16px;
+  background: linear-gradient(135deg, #b8860b, #d4a017);
+  color: #0a0800;
+  border: none;
+  padding: 12px 32px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(184,134,11,0.3);
+  transition: all 0.3s;
+}
+
+.btn-cetak-dok:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(184,134,11,0.4); }
+
+/* Tombol logout */
+.logout-wrap {
+  max-width: 560px;
+  margin: 40px auto 0;
+  text-align: center;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid #3a2a00;
+  color: #5a4000;
+  padding: 10px 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-logout:hover { border-color: #c05050; color: #c05050; }
+
+/* ===== STYLES PIAGAM (dari file asli) ===== */
+.piagam {
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(160deg, #1c1a0f 0%, #0f0e08 40%, #1a1506 100%);
+  border: 3px solid #b8860b;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 0 60px rgba(184,134,11,0.3), 0 0 0 1px #7a5c00, inset 0 0 80px rgba(0,0,0,0.5);
+}
+.sudut { position: absolute; width: 36px; height: 36px; }
+.sudut-tl { top: 10px; left: 10px; border-top: 2px solid #d4a017; border-left: 2px solid #d4a017; }
+.sudut-tr { top: 10px; right: 10px; border-top: 2px solid #d4a017; border-right: 2px solid #d4a017; }
+.sudut-bl { bottom: 10px; left: 10px; border-bottom: 2px solid #d4a017; border-left: 2px solid #d4a017; }
+.sudut-br { bottom: 10px; right: 10px; border-bottom: 2px solid #d4a017; border-right: 2px solid #d4a017; }
+.isi { padding: 36px 32px 32px; position: relative; z-index: 1; }
+.nomor { text-align:center; font-family:'Cinzel',serif; font-size:9px; color:#b8860b; letter-spacing:2px; margin-bottom:20px; }
+.logo-wrap { display:flex; justify-content:center; margin-bottom:16px; }
+.logo-lingkaran { width:72px; height:72px; border-radius:50%; border:2px solid #b8860b; background:radial-gradient(circle,#2a2200,#0f0e00); display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 0 20px rgba(184,134,11,0.4); }
+.judul-wrap { text-align:center; margin-bottom:20px; }
+.judul-besar { font-family:'Cinzel',serif; font-size:32px; font-weight:900; color:#d4a017; letter-spacing:8px; text-shadow:0 0 20px rgba(212,160,23,0.4); line-height:1; margin-bottom:6px; }
+.judul-kecil { font-family:'Cinzel',serif; font-size:11px; color:#a07010; letter-spacing:5px; text-transform:uppercase; }
+.garis { border:none; height:1px; background:linear-gradient(to right,transparent,#b8860b,transparent); margin:16px 0; }
+.dasar { text-align:center; font-size:13px; color:#c8b87a; font-style:italic; line-height:1.9; margin-bottom:16px; }
+.nama-wrap { text-align:center; margin-bottom:6px; }
+.label-diberikan { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#7a5c00; text-transform:uppercase; margin-bottom:8px; }
+.nama-besar { font-family:'Cinzel',serif; font-size:20px; font-weight:700; color:#f0d060; letter-spacing:2px; text-shadow:0 0 14px rgba(240,208,96,0.3); line-height:1.2; }
+.nama-jabatan { font-size:12px; color:#9a8040; font-style:italic; margin-top:4px; letter-spacing:1px; }
+.lembaga-wrap { text-align:center; margin:14px 0; padding:10px; border-top:1px solid rgba(184,134,11,0.2); border-bottom:1px solid rgba(184,134,11,0.2); }
+.lembaga-nama { font-family:'Cinzel',serif; font-size:13px; font-weight:700; color:#d4a017; letter-spacing:1px; }
+.lembaga-sub { font-size:11px; color:#7a6020; margin-top:3px; font-style:italic; }
+.lembaga-sk { font-size:10px; color:#5a4a10; margin-top:4px; }
+.tugas-wrap { margin:16px 0; }
+.tugas-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#b8860b; text-transform:uppercase; text-align:center; margin-bottom:12px; }
+.tugas-item { display:flex; gap:10px; align-items:flex-start; padding:8px 10px; border-bottom:1px solid rgba(184,134,11,0.1); }
+.tugas-item:last-child { border-bottom:none; }
+.tugas-no { font-family:'Cinzel',serif; font-size:10px; color:#b8860b; flex-shrink:0; min-width:18px; margin-top:2px; }
+.tugas-teks { font-size:12.5px; color:#c8b87a; line-height:1.6; }
+.kewajiban-wrap { background:rgba(184,134,11,0.06); border:1px solid rgba(184,134,11,0.15); border-radius:4px; padding:12px 14px; margin:12px 0; }
+.kewajiban-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#b8860b; text-transform:uppercase; margin-bottom:10px; text-align:center; }
+.kewajiban-item { display:flex; gap:8px; font-size:12px; color:#b0a060; line-height:1.6; padding:3px 0; border-bottom:1px solid rgba(184,134,11,0.07); }
+.kewajiban-item:last-child { border-bottom:none; }
+.kewajiban-item::before { content:'◆'; font-size:7px; color:#b8860b; margin-top:5px; flex-shrink:0; }
+.larangan-wrap { background:rgba(180,30,30,0.08); border:1px solid rgba(180,30,30,0.2); border-radius:4px; padding:10px 14px; margin:10px 0; }
+.larangan-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#c05050; text-transform:uppercase; margin-bottom:8px; text-align:center; }
+.larangan-item { display:flex; gap:8px; font-size:12px; color:#a07070; line-height:1.6; padding:2px 0; }
+.larangan-item::before { content:'✕'; font-size:9px; color:#c05050; flex-shrink:0; margin-top:2px; }
+.penutup { text-align:center; font-size:12px; color:#7a6020; font-style:italic; line-height:1.8; margin:14px 0; }
+.nomor-statistik { text-align:center; margin-top:20px; padding-top:14px; border-top:1px solid rgba(184,134,11,0.2); }
+.stat-label { font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:#5a4a10; text-transform:uppercase; margin-bottom:4px; }
+.stat-nomor { font-family:'Cinzel',serif; font-size:18px; color:#b8860b; letter-spacing:3px; }
+.ttd-section { margin-top:20px; border-top:1px solid rgba(184,134,11,0.3); padding-top:18px; }
+.ttd-tanggal { text-align:right; font-size:12px; color:#9a8040; font-style:italic; margin-bottom:30px; }
+.ttd-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ttd-box { text-align:center; }
+.ttd-label-kecil { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:#7a5c00; text-transform:uppercase; margin-bottom:50px; }
+.ttd-garis { border-top:1px solid #b8860b; margin-bottom:5px; }
+.ttd-nama { font-family:'Cinzel',serif; font-size:11px; font-weight:700; color:#d4a017; letter-spacing:0.5px; line-height:1.3; }
+.ttd-nama-lengkap { font-size:10px; color:#7a6020; font-style:italic; margin-top:2px; }
+.ttd-jabatan { font-size:10px; color:#5a4a10; font-style:italic; }
+.bijak-wrap { background:rgba(184,134,11,0.04); border:1px solid rgba(184,134,11,0.2); border-radius:4px; padding:14px 16px; margin:14px 0; text-align:center; }
+.bijak-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#b8860b; text-transform:uppercase; margin-bottom:8px; }
+.bijak-teks { font-size:13px; color:#c8b87a; font-style:italic; line-height:1.8; }
+.karakter-wrap { background:rgba(30,60,120,0.15); border:1px solid rgba(100,150,255,0.15); border-radius:4px; padding:14px 16px; margin:14px 0; text-align:center; }
+.karakter-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#7090d0; text-transform:uppercase; margin-bottom:8px; }
+.karakter-teks { font-size:13px; color:#b0c0e0; font-style:italic; line-height:1.8; }
+
+/* Dokumen kontrak */
+.dokumen { width:100%; max-width:480px; background:linear-gradient(170deg,#0a0800 0%,#080600 50%,#0d0a00 100%); border:3px solid #b8860b; border-radius:4px; position:relative; box-shadow:0 0 80px rgba(184,134,11,0.25),0 0 0 1px #5a4000,inset 0 0 100px rgba(0,0,0,0.6); }
+.sudut2 { position:absolute; width:28px; height:28px; }
+.sudut2-tl { top:18px; left:18px; border-top:1px solid #8a6000; border-left:1px solid #8a6000; }
+.sudut2-tr { top:18px; right:18px; border-top:1px solid #8a6000; border-right:1px solid #8a6000; }
+.sudut2-bl { bottom:18px; left:18px; border-bottom:1px solid #8a6000; border-left:1px solid #8a6000; }
+.sudut2-br { bottom:18px; right:18px; border-bottom:1px solid #8a6000; border-right:1px solid #8a6000; }
+.judul-atas { font-family:'Cinzel',serif; font-size:11px; color:#8a6000; letter-spacing:5px; text-transform:uppercase; margin-bottom:8px; }
+.judul-bawah { font-family:'Cinzel',serif; font-size:11px; color:#a07010; letter-spacing:3px; text-transform:uppercase; }
+.garis-tipis { border:none; height:1px; background:linear-gradient(to right,transparent,#5a4000,transparent); margin:16px 0; }
+.bismillah { text-align:center; font-size:22px; color:#d4a017; margin-bottom:8px; text-shadow:0 0 16px rgba(212,160,23,0.3); letter-spacing:3px; }
+.bismillah-latin { text-align:center; font-size:12px; color:#7a5c00; font-style:italic; letter-spacing:2px; margin-bottom:20px; }
+.pembuka { font-size:14px; color:#c8b87a; line-height:1.9; text-align:center; font-style:italic; margin-bottom:20px; }
+.pihak-wrap { background:rgba(184,134,11,0.05); border:1px solid rgba(184,134,11,0.15); border-radius:4px; padding:16px 18px; margin:16px 0; }
+.pihak-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#b8860b; text-transform:uppercase; margin-bottom:14px; text-align:center; }
+.pihak-item { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid rgba(184,134,11,0.08); }
+.pihak-item:last-child { border-bottom:none; }
+.pihak-no { font-family:'Cinzel',serif; font-size:10px; color:#b8860b; flex-shrink:0; margin-top:2px; min-width:20px; }
+.pihak-info { flex:1; }
+.pihak-nama { font-family:'Cinzel',serif; font-size:13px; font-weight:700; color:#f0d060; line-height:1.2; }
+.pihak-nama-lengkap { font-size:11px; color:#7a6020; font-style:italic; margin-top:1px; }
+.pihak-jabatan { font-size:11px; color:#9a8040; margin-top:2px; }
+.pasal { margin:20px 0; }
+.pasal-judul { font-family:'Cinzel',serif; font-size:11px; color:#d4a017; letter-spacing:3px; text-transform:uppercase; text-align:center; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid rgba(184,134,11,0.2); }
+.pasal-sub { font-family:'Cinzel',serif; font-size:9px; color:#8a6000; letter-spacing:2px; text-transform:uppercase; margin:12px 0 8px; }
+.pasal-isi { font-size:13.5px; color:#c8b87a; line-height:1.9; margin-bottom:10px; }
+.komitmen-item { display:flex; gap:10px; align-items:flex-start; padding:6px 0; border-bottom:1px solid rgba(184,134,11,0.07); font-size:13px; color:#c0b070; line-height:1.6; }
+.komitmen-item:last-child { border-bottom:none; }
+.komitmen-no { font-family:'Cinzel',serif; font-size:10px; color:#b8860b; flex-shrink:0; margin-top:2px; min-width:20px; }
+.sumpah { background:linear-gradient(135deg,rgba(30,20,0,0.8),rgba(20,15,0,0.9)); border:2px solid #b8860b; border-radius:6px; padding:20px 22px; margin:20px 0; position:relative; overflow:hidden; }
+.sumpah-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#d4a017; text-transform:uppercase; text-align:center; margin-bottom:14px; }
+.sumpah-teks { font-size:14px; color:#e0d090; line-height:2; text-align:center; font-style:italic; position:relative; z-index:1; }
+.konsekuensi { background:rgba(120,20,20,0.1); border:1px solid rgba(180,30,30,0.2); border-radius:4px; padding:14px 16px; margin:14px 0; }
+.konsekuensi-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:#c05050; text-transform:uppercase; text-align:center; margin-bottom:10px; }
+.konsekuensi-item { display:flex; gap:8px; font-size:12.5px; color:#a07070; line-height:1.6; padding:4px 0; }
+.konsekuensi-item::before { content:'⚠'; font-size:11px; color:#c05050; flex-shrink:0; margin-top:1px; }
+.penutup-dok { text-align:center; font-size:13px; color:#7a6020; font-style:italic; line-height:1.9; margin:20px 0; }
+.meterai-wrap { display:flex; justify-content:center; margin:20px 0 10px; }
+.meterai { width:100px; height:100px; border-radius:50%; border:2px solid #b8860b; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; }
+.meterai::before { content:''; position:absolute; inset:6px; border-radius:50%; border:1px dashed #6a5000; }
+.meterai-teks { font-family:'Cinzel',serif; font-size:7px; color:#b8860b; text-align:center; line-height:1.5; padding:0 10px; position:relative; z-index:1; letter-spacing:0.5px; }
+.ttd-grid-atas { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+.ttd-grid-bawah { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+@media print {
+  #lock-screen { display:none !important; }
+  #main-content { display:block !important; }
+  body { background:white; }
+  .piagam, .dokumen { background:white !important; border-color:#000; box-shadow:none; }
+  .piagam *, .dokumen * { color:#000 !important; text-shadow:none !important; }
+  .dok-nav, .btn-cetak-dok, .logout-wrap, .internal-header, .section-label { display:none; }
+  @page { margin:10mm; size:A4; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOCK SCREEN ===== -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-sudut tl"></div>
+    <div class="lock-sudut tr"></div>
+    <div class="lock-sudut bl"></div>
+    <div class="lock-sudut br"></div>
+    <span class="lock-icon">🔐</span>
+    <div class="lock-title">BTN</div>
+    <div class="lock-sub">Dokumen Internal · Rahasia</div>
+    <div class="lock-label">Masukkan Password</div>
+    <input type="password" class="lock-input" id="pwd-input"
+      placeholder="••••••••"
+      onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="lock-btn" onclick="checkPassword()">🔓 &nbsp;BUKA DOKUMEN</button>
+    <div class="lock-error" id="lock-error">Password salah. Coba lagi.</div>
+  </div>
+</div>
+
+<!-- ===== KONTEN UTAMA ===== -->
+<div id="main-content">
+
+  <div class="internal-header">
+    <div class="ih-badge">🌾 Yayasan Bahula Tani Nusantara · Dokumen Internal</div>
+    <h1>ARSIP AMANAH</h1>
+    <p>Piagam & Kontrak Komitmen Pengurus BTN · 2026</p>
+  </div>
+
+  <!-- Navigasi cepat -->
+  <div class="dok-nav">
+    <div class="dok-nav-btn" onclick="document.getElementById('dok1').scrollIntoView({behavior:'smooth'})">
+      🌾 Piagam<br>Ketua Pengurus
+    </div>
+    <div class="dok-nav-btn" onclick="document.getElementById('dok2').scrollIntoView({behavior:'smooth'})">
+      ⚖️ Piagam<br>Pengawas
+    </div>
+    <div class="dok-nav-btn" onclick="document.getElementById('dok3').scrollIntoView({behavior:'smooth'})">
+      🤝 Piagam<br>Humas & Kemitraan
+    </div>
+    <div class="dok-nav-btn" onclick="document.getElementById('dok4').scrollIntoView({behavior:'smooth'})">
+      📋 Kontrak<br>Komitmen Bersama
+    </div>
+  </div>
+
+  <!-- DOK 1 -->
+  <div class="section-label"><span>✦ Piagam 001 · Ketua Pengurus ✦</span></div>
+  <div class="dok-wrapper" id="dok1">
+    <div class="piagam">
+  <div class="sudut sudut-tl"></div>
+  <div class="sudut sudut-tr"></div>
+  <div class="sudut sudut-bl"></div>
+  <div class="sudut sudut-br"></div>
+
+  <div class="isi">
+
+    <!-- Nomor -->
+    <div class="nomor">BTN/PA-KP/001/2026</div>
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-lingkaran">🌾</div>
+    </div>
+
+    <!-- Judul -->
+    <div class="judul-wrap">
+      <div class="judul-besar">PIAGAM</div>
+      <div class="judul-kecil">Amanah Ketua Pengurus</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Dasar -->
+    <div class="dasar">
+      Berdasarkan musyawarah dan keputusan Pendiri<br>
+      Yayasan Bahula Tani Nusantara<br>
+      yang bernaung di bawah<br>
+      <em>SK KTSadar No. 141.1/18/XI/2021</em><br>
+      Diberikan kepada :
+    </div>
+
+    <!-- Nama Penerima -->
+    <div class="nama-wrap">
+      <div class="label-diberikan">Nama Penerima Amanah</div>
+      <div class="nama-besar">MUHAMAD KOMARUDJAMAN</div>
+      <div class="nama-jabatan">Ketua Pengurus · Yayasan Bahula Tani Nusantara</div>
+    </div>
+
+    <!-- Lembaga -->
+    <div class="lembaga-wrap">
+      <div class="lembaga-nama">YAYASAN BAHULA TANI NUSANTARA</div>
+      <div class="lembaga-sub">Jaga Ngariksa Leweung — Balik Ka Akar Menuju Masa Depan</div>
+      <div class="lembaga-sk">Kp. Pasir Ipis · Desa Gunungguruh · Kab. Sukabumi · Jawa Barat</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Tugas -->
+    <div class="tugas-wrap">
+      <div class="tugas-label">✦ Tugas & Kewenangan ✦</div>
+      <div class="tugas-item"><span class="tugas-no">01</span><span class="tugas-teks">Memimpin dan mengkoordinasikan seluruh kegiatan operasional yayasan sehari-hari.</span></div>
+      <div class="tugas-item"><span class="tugas-no">02</span><span class="tugas-teks">Melaksanakan program kerja yang telah ditetapkan oleh Pendiri sesuai visi dan misi BTN.</span></div>
+      <div class="tugas-item"><span class="tugas-no">03</span><span class="tugas-teks">Mewakili yayasan secara resmi di dalam dan di luar forum, pertemuan, dan dokumen resmi.</span></div>
+      <div class="tugas-item"><span class="tugas-no">04</span><span class="tugas-teks">Mengelola aset dan keuangan yayasan secara transparan dan bertanggung jawab.</span></div>
+      <div class="tugas-item"><span class="tugas-no">05</span><span class="tugas-teks">Menyusun laporan berkala kepada Pendiri mengenai perkembangan program dan keuangan.</span></div>
+      <div class="tugas-item"><span class="tugas-no">06</span><span class="tugas-teks">Membangun komunikasi aktif dengan anggota, mitra, donatur, dan pemangku kepentingan.</span></div>
+      <div class="tugas-item"><span class="tugas-no">07</span><span class="tugas-teks">Mengkoordinasikan distribusi pupuk subsidi, pengelolaan sawah komunal, dan program agroforestri.</span></div>
+      <div class="tugas-item"><span class="tugas-no">08</span><span class="tugas-teks">Menjalin kerja sama dengan lembaga pemerintah, swasta, dan komunitas untuk kepentingan anggota.</span></div>
+    </div>
+
+    <!-- Kewajiban -->
+    <div class="kewajiban-wrap">
+      <div class="kewajiban-label">✦ Kewajiban ✦</div>
+      <div class="kewajiban-item">Hadir dan aktif dalam setiap rapat, musyawarah, dan kegiatan yayasan.</div>
+      <div class="kewajiban-item">Menjaga kehormatan dan nama baik yayasan dalam setiap tindakan dan ucapan.</div>
+      <div class="kewajiban-item">Melaporkan setiap penerimaan dan pengeluaran keuangan secara terbuka kepada Pendiri dan Pengawas.</div>
+      <div class="kewajiban-item">Mengutamakan kepentingan anggota dan komunitas di atas kepentingan pribadi.</div>
+      <div class="kewajiban-item">Tunduk pada keputusan Pendiri dan berkoordinasi aktif dengan Pengawas.</div>
+    </div>
+
+    <!-- Larangan -->
+    <div class="larangan-wrap">
+      <div class="larangan-label">✕ Larangan</div>
+      <div class="larangan-item">Tidak boleh menggunakan aset atau dana yayasan untuk kepentingan pribadi.</div>
+      <div class="larangan-item">Tidak boleh mengambil keputusan besar tanpa persetujuan Pendiri dan konsultasi Pengawas.</div>
+      <div class="larangan-item">Tidak boleh merangkap jabatan Pendiri atau Pengawas dalam yayasan yang sama.</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Penutup -->
+    <div class="penutup">
+      Piagam ini merupakan tanda kewenangan mengemban amanah<br>
+      sebagai Ketua Pengurus Yayasan Bahula Tani Nusantara<br>
+      sesuai dengan nilai, visi, dan misi yang telah disepakati bersama.<br>
+      <em>Semoga Allah meridhoi setiap langkah yang diambil.</em>
+    </div>
+
+    <!-- Nomor Statistik -->
+    <div class="nomor-statistik">
+      <div class="stat-label">Nomor Registrasi Amanah</div>
+      <div class="stat-nomor">BTN · 001 · 2026</div>
+    </div>
+
+    <!-- TTD -->
+    <div class="ttd-section">
+      <div class="ttd-tanggal">Sukabumi, .................. 2026</div>
+      <div class="ttd-grid">
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Penerima Amanah</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">MUHAMAD KOMARUDJAMAN</div>
+          <div class="ttd-jabatan">Ketua Pengurus</div>
+        </div>
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Pendiri</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">HUDRI</div>
+          <div class="ttd-nama-lengkap">Moch Malvie Alkhudriyah</div>
+          <div class="ttd-jabatan">Pendiri · Yayasan Bahula Tani Nusantara</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Tombol Cetak -->
+    <button class="btn-cetak-dok" onclick="printDok('dok1')">🖨️ &nbsp;Cetak Piagam Ini</button>
+  </div>
+
+  <!-- DOK 2 -->
+  <div class="section-label"><span>✦ Piagam 002 · Pengawas ✦</span></div>
+  <div class="dok-wrapper" id="dok2">
+    <div class="piagam">
+  <div class="sudut sudut-tl"></div>
+  <div class="sudut sudut-tr"></div>
+  <div class="sudut sudut-bl"></div>
+  <div class="sudut sudut-br"></div>
+
+  <div class="isi">
+
+    <div class="nomor">BTN/PA-PW/002/2026</div>
+
+    <div class="logo-wrap">
+      <div class="logo-lingkaran">⚖️</div>
+    </div>
+
+    <div class="judul-wrap">
+      <div class="judul-besar">PIAGAM</div>
+      <div class="judul-kecil">Amanah Pengawas</div>
+    </div>
+
+    <hr class="garis">
+
+    <div class="dasar">
+      Berdasarkan musyawarah dan keputusan Pendiri<br>
+      Yayasan Bahula Tani Nusantara<br>
+      yang bernaung di bawah<br>
+      <em>SK KTSadar No. 141.1/18/XI/2021</em><br>
+      Diberikan kepada :
+    </div>
+
+    <div class="nama-wrap">
+      <div class="label-diberikan">Nama Penerima Amanah</div>
+      <div class="nama-besar">USTADZ KAKAT</div>
+      <div class="nama-jabatan">Pengawas · Yayasan Bahula Tani Nusantara</div>
+    </div>
+
+    <div class="lembaga-wrap">
+      <div class="lembaga-nama">YAYASAN BAHULA TANI NUSANTARA</div>
+      <div class="lembaga-sub">Jaga Ngariksa Leweung — Balik Ka Akar Menuju Masa Depan</div>
+      <div class="lembaga-sk">Kp. Pasir Ipis · Desa Gunungguruh · Kab. Sukabumi · Jawa Barat</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Kotak Kebijaksanaan -->
+    <div class="bijak-wrap">
+      <div class="bijak-label">✦ Dasar Penunjukan ✦</div>
+      <div class="bijak-teks">
+        Pengawas dipilih bukan karena kekuasaan,<br>
+        melainkan karena <strong style="color:#d4a017;">kebijaksanaan</strong> —<br>
+        kemampuan menilai dengan hati yang jernih<br>
+        dan menasihati dengan penuh hikmah.
+      </div>
+    </div>
+
+    <!-- Tugas -->
+    <div class="tugas-wrap">
+      <div class="tugas-label">✦ Tugas & Kewenangan ✦</div>
+      <div class="tugas-item"><span class="tugas-no">01</span><span class="tugas-teks">Mengawasi jalannya seluruh kegiatan yayasan agar sesuai dengan visi, misi, dan nilai-nilai BTN.</span></div>
+      <div class="tugas-item"><span class="tugas-no">02</span><span class="tugas-teks">Memeriksa laporan keuangan dan program kerja yang disampaikan oleh Pengurus secara berkala.</span></div>
+      <div class="tugas-item"><span class="tugas-no">03</span><span class="tugas-teks">Memberikan nasihat dan pertimbangan kebijaksanaan kepada Pengurus dalam pengambilan keputusan.</span></div>
+      <div class="tugas-item"><span class="tugas-no">04</span><span class="tugas-teks">Menjadi penengah yang adil apabila terjadi perselisihan internal di antara anggota atau pengurus.</span></div>
+      <div class="tugas-item"><span class="tugas-no">05</span><span class="tugas-teks">Melaporkan hasil pengawasan kepada Pendiri secara berkala atau apabila ditemukan hal yang perlu perhatian.</span></div>
+      <div class="tugas-item"><span class="tugas-no">06</span><span class="tugas-teks">Memastikan seluruh keputusan yayasan tidak bertentangan dengan nilai agama, adat, dan hukum yang berlaku.</span></div>
+    </div>
+
+    <!-- Kewajiban -->
+    <div class="kewajiban-wrap">
+      <div class="kewajiban-label">✦ Kewajiban ✦</div>
+      <div class="kewajiban-item">Bersikap independen, objektif, dan tidak memihak dalam setiap penilaian dan nasihat.</div>
+      <div class="kewajiban-item">Hadir dalam rapat evaluasi dan musyawarah besar yayasan minimal sekali dalam tiga bulan.</div>
+      <div class="kewajiban-item">Menjaga kerahasiaan informasi internal yayasan yang bersifat sensitif.</div>
+      <div class="kewajiban-item">Mengingatkan Pengurus dengan cara yang baik dan penuh hikmah apabila ada yang melenceng.</div>
+      <div class="kewajiban-item">Menjadi teladan akhlak dan kebijaksanaan bagi seluruh anggota yayasan.</div>
+    </div>
+
+    <!-- Larangan -->
+    <div class="larangan-wrap">
+      <div class="larangan-label">✕ Larangan</div>
+      <div class="larangan-item">Tidak boleh merangkap jabatan Pendiri atau Pengurus dalam yayasan yang sama.</div>
+      <div class="larangan-item">Tidak boleh mencampuri urusan operasional harian yang menjadi kewenangan Pengurus.</div>
+      <div class="larangan-item">Tidak boleh menggunakan posisi Pengawas untuk kepentingan pribadi atau kelompok tertentu.</div>
+    </div>
+
+    <hr class="garis">
+
+    <div class="penutup">
+      Piagam ini merupakan tanda kewenangan mengemban amanah<br>
+      sebagai Pengawas Yayasan Bahula Tani Nusantara<br>
+      sesuai dengan nilai, visi, dan misi yang telah disepakati bersama.<br>
+      <em>Semoga Allah meridhoi setiap langkah yang diambil.</em>
+    </div>
+
+    <div class="nomor-statistik">
+      <div class="stat-label">Nomor Registrasi Amanah</div>
+      <div class="stat-nomor">BTN · 002 · 2026</div>
+    </div>
+
+    <!-- TTD -->
+    <div class="ttd-section">
+      <div class="ttd-tanggal">Sukabumi, .................. 2026</div>
+      <div class="ttd-grid">
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Penerima Amanah</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">USTADZ KAKAT</div>
+          <div class="ttd-jabatan">Pengawas</div>
+        </div>
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Pendiri</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">HUDRI</div>
+          <div class="ttd-nama-lengkap">Moch Malvie Alkhudriyah</div>
+          <div class="ttd-jabatan">Pendiri · Yayasan Bahula Tani Nusantara</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+    <button class="btn-cetak-dok" onclick="printDok('dok2')">🖨️ &nbsp;Cetak Piagam Ini</button>
+  </div>
+
+  <!-- DOK 3 -->
+  <div class="section-label"><span>✦ Piagam 003 · Humas & Kemitraan ✦</span></div>
+  <div class="dok-wrapper" id="dok3">
+    <div class="piagam">
+  <div class="sudut sudut-tl"></div>
+  <div class="sudut sudut-tr"></div>
+  <div class="sudut sudut-bl"></div>
+  <div class="sudut sudut-br"></div>
+
+  <div class="isi">
+
+    <div class="nomor">BTN/PA-HK/003/2026</div>
+
+    <div class="logo-wrap">
+      <div class="logo-lingkaran">🤝</div>
+    </div>
+
+    <div class="judul-wrap">
+      <div class="judul-besar">PIAGAM</div>
+      <div class="judul-kecil">Amanah Kepala Bidang<br>Hubungan Masyarakat & Kemitraan</div>
+    </div>
+
+    <hr class="garis">
+
+    <div class="dasar">
+      Berdasarkan musyawarah dan keputusan Pendiri<br>
+      Yayasan Bahula Tani Nusantara<br>
+      yang bernaung di bawah<br>
+      <em>SK KTSadar No. 141.1/18/XI/2021</em><br>
+      Diberikan kepada :
+    </div>
+
+    <div class="nama-wrap">
+      <div class="label-diberikan">Nama Penerima Amanah</div>
+      <div class="nama-besar">USTADZ AYEH</div>
+      <div class="nama-jabatan">Kabid Humas & Kemitraan · Yayasan Bahula Tani Nusantara</div>
+    </div>
+
+    <div class="lembaga-wrap">
+      <div class="lembaga-nama">YAYASAN BAHULA TANI NUSANTARA</div>
+      <div class="lembaga-sub">Jaga Ngariksa Leweung — Balik Ka Akar Menuju Masa Depan</div>
+      <div class="lembaga-sk">Kp. Pasir Ipis · Desa Gunungguruh · Kab. Sukabumi · Jawa Barat</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Kotak Karakter -->
+    <div class="karakter-wrap">
+      <div class="karakter-label">✦ Dasar Penunjukan ✦</div>
+      <div class="karakter-teks">
+        Kabid Humas & Kemitraan dipilih karena<br>
+        <strong style="color:#d4a017;">keberanian, kepercayaan diri, dan kemampuan</strong><br>
+        membuka pintu peluang bagi yayasan —<br>
+        menjadi wajah BTN di hadapan dunia luar.
+      </div>
+    </div>
+
+    <!-- Tugas -->
+    <div class="tugas-wrap">
+      <div class="tugas-label">✦ Tugas & Kewenangan ✦</div>
+      <div class="tugas-item"><span class="tugas-no">01</span><span class="tugas-teks">Menyusun dan mengajukan proposal kerja sama, bantuan, dan kemitraan ke instansi pemerintah, swasta, dan lembaga donor.</span></div>
+      <div class="tugas-item"><span class="tugas-no">02</span><span class="tugas-teks">Membangun dan menjaga jaringan mitra strategis — dinas pertanian, Kemenag, NGO, perusahaan, dan komunitas.</span></div>
+      <div class="tugas-item"><span class="tugas-no">03</span><span class="tugas-teks">Menjalankan strategi marketing program BTN kepada publik, donatur potensial, dan lembaga pendukung.</span></div>
+      <div class="tugas-item"><span class="tugas-no">04</span><span class="tugas-teks">Merepresentasikan BTN di forum, pameran, seminar, dan pertemuan eksternal atas arahan Ketua Pengurus.</span></div>
+      <div class="tugas-item"><span class="tugas-no">05</span><span class="tugas-teks">Melakukan follow up aktif terhadap seluruh pengajuan dan penjajakan kerja sama yang sedang berjalan.</span></div>
+      <div class="tugas-item"><span class="tugas-no">06</span><span class="tugas-teks">Mengelola komunikasi publik yayasan — siaran pers, surat resmi, dan publikasi program ke media.</span></div>
+      <div class="tugas-item"><span class="tugas-no">07</span><span class="tugas-teks">Melaporkan perkembangan hubungan eksternal dan hasil penggalangan dana kepada Ketua Pengurus dan Pendiri.</span></div>
+    </div>
+
+    <!-- Kewajiban -->
+    <div class="kewajiban-wrap">
+      <div class="kewajiban-label">✦ Kewajiban ✦</div>
+      <div class="kewajiban-item">Menjaga integritas dan kejujuran dalam setiap komunikasi mewakili yayasan.</div>
+      <div class="kewajiban-item">Tidak bernegosiasi atau menandatangani perjanjian tanpa persetujuan Ketua Pengurus dan Pendiri.</div>
+      <div class="kewajiban-item">Melaporkan seluruh hasil kunjungan, pertemuan, dan pengajuan secara tertulis kepada Ketua Pengurus.</div>
+      <div class="kewajiban-item">Menjaga nama baik yayasan dalam setiap pertemuan dan komunikasi dengan pihak eksternal.</div>
+      <div class="kewajiban-item">Aktif berkoordinasi dengan Ketua Pengurus sebelum dan sesudah setiap kegiatan eksternal.</div>
+    </div>
+
+    <!-- Larangan -->
+    <div class="larangan-wrap">
+      <div class="larangan-label">✕ Larangan</div>
+      <div class="larangan-item">Tidak boleh membuat janji atau komitmen kepada pihak luar tanpa sepengetahuan Pendiri atau Ketua Pengurus.</div>
+      <div class="larangan-item">Tidak boleh menerima imbalan pribadi dari mitra atas nama yayasan tanpa transparansi.</div>
+      <div class="larangan-item">Tidak boleh mengatasnamakan yayasan untuk kepentingan di luar program yang telah disepakati.</div>
+    </div>
+
+    <hr class="garis">
+
+    <div class="penutup">
+      Piagam ini merupakan tanda kewenangan mengemban amanah<br>
+      sebagai Kepala Bidang Humas & Kemitraan<br>
+      Yayasan Bahula Tani Nusantara.<br>
+      <em>Semoga Allah meridhoi setiap langkah yang diambil.</em>
+    </div>
+
+    <div class="nomor-statistik">
+      <div class="stat-label">Nomor Registrasi Amanah</div>
+      <div class="stat-nomor">BTN · 003 · 2026</div>
+    </div>
+
+    <!-- TTD -->
+    <div class="ttd-section">
+      <div class="ttd-tanggal">Sukabumi, .................. 2026</div>
+      <div class="ttd-grid">
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Penerima Amanah</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">USTADZ AYEH</div>
+          <div class="ttd-jabatan">Kabid Humas & Kemitraan</div>
+        </div>
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Pendiri</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">HUDRI</div>
+          <div class="ttd-nama-lengkap">Moch Malvie Alkhudriyah</div>
+          <div class="ttd-jabatan">Pendiri · Yayasan Bahula Tani Nusantara</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+    <button class="btn-cetak-dok" onclick="printDok('dok3')">🖨️ &nbsp;Cetak Piagam Ini</button>
+  </div>
+
+  <!-- DOK 4 -->
+  <div class="section-label"><span>✦ Kontrak Komitmen Bersama ✦</span></div>
+  <div class="dok-wrapper" id="dok4">
+    <div class="dokumen">
+  <div class="sudut sudut-tl"></div>
+  <div class="sudut sudut-tr"></div>
+  <div class="sudut sudut-bl"></div>
+  <div class="sudut sudut-br"></div>
+  <div class="sudut2 sudut2-tl"></div>
+  <div class="sudut2 sudut2-tr"></div>
+  <div class="sudut2 sudut2-bl"></div>
+  <div class="sudut2 sudut2-br"></div>
+
+  <div class="isi">
+
+    <div class="nomor">BTN/KKB/2026 · DOKUMEN INTERNAL · RAHASIA</div>
+
+    <div class="logo-wrap">
+      <div class="logo-lingkaran">🌾</div>
+    </div>
+
+    <div class="judul-wrap">
+      <div class="judul-atas">Yayasan Bahula Tani Nusantara</div>
+      <div class="judul-besar">KONTRAK<br>KOMITMEN</div>
+      <div class="judul-bawah">Kesetiaan & Amanah Dalam Bertugas</div>
+    </div>
+
+    <hr class="garis">
+
+    <!-- Bismillah -->
+    <div class="bismillah">﷽</div>
+    <div class="bismillah-latin">Bismillahirrahmanirrahim</div>
+
+    <div class="pembuka">
+      Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang,
+      kami yang bertanda tangan di bawah ini, dengan penuh kesadaran,
+      keikhlasan, dan tanpa paksaan dari siapapun —
+      menyatakan kesepakatan dan komitmen bersama
+      untuk mengemban amanah ini dengan sepenuh hati,
+      demi kemaslahatan petani, kelestarian alam,
+      dan generasi Pasir Ipis yang akan datang.
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- Para Pihak -->
+    <div class="pihak-wrap">
+      <div class="pihak-label">✦ Para Pihak Yang Berkomitmen ✦</div>
+
+      <div class="pihak-item">
+        <span class="pihak-no">I.</span>
+        <div class="pihak-info">
+          <div class="pihak-nama">HUDRI</div>
+          <div class="pihak-nama-lengkap">Moch Malvie Alkhudriyah</div>
+          <div class="pihak-jabatan">Pendiri · Yayasan Bahula Tani Nusantara</div>
+        </div>
+      </div>
+
+      <div class="pihak-item">
+        <span class="pihak-no">II.</span>
+        <div class="pihak-info">
+          <div class="pihak-nama">MUHAMAD KOMARUDJAMAN</div>
+          <div class="pihak-nama-lengkap">Ustadz Komar</div>
+          <div class="pihak-jabatan">Ketua Pengurus · Yayasan Bahula Tani Nusantara</div>
+        </div>
+      </div>
+
+      <div class="pihak-item">
+        <span class="pihak-no">III.</span>
+        <div class="pihak-info">
+          <div class="pihak-nama">USTADZ KAKAT</div>
+          <div class="pihak-jabatan">Pengawas · Yayasan Bahula Tani Nusantara</div>
+        </div>
+      </div>
+
+      <div class="pihak-item">
+        <span class="pihak-no">IV.</span>
+        <div class="pihak-info">
+          <div class="pihak-nama">USTADZ AYEH</div>
+          <div class="pihak-jabatan">Kabid Humas & Kemitraan · Yayasan Bahula Tani Nusantara</div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- PASAL 1 -->
+    <div class="pasal">
+      <div class="pasal-judul">✦ Pasal 1 · Landasan Bersama ✦</div>
+      <div class="pasal-isi">
+        Kontrak ini didasari oleh kesadaran penuh bahwa jabatan dalam Yayasan Bahula Tani Nusantara
+        bukan sekadar posisi organisasi — melainkan sebuah <strong style="color:#d4a017;">amanah dari Allah</strong>
+        yang akan dipertanggungjawabkan di dunia dan di akhirat.
+        Kami bersepakat bahwa kepentingan komunitas, petani, dan alam
+        selalu berada di atas kepentingan pribadi masing-masing.
+      </div>
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- PASAL 2 -->
+    <div class="pasal">
+      <div class="pasal-judul">✦ Pasal 2 · Komitmen Kesetiaan ✦</div>
+      <div class="pasal-sub">Kami berkomitmen untuk:</div>
+
+      <div class="komitmen-item">
+        <span class="komitmen-no">1.</span>
+        Setia pada visi dan misi Yayasan Bahula Tani Nusantara — <em>Jaga Ngariksa Leweung, Balik Ka Akar Menuju Masa Depan.</em>
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">2.</span>
+        Menjalankan tugas dan kewenangan masing-masing dengan penuh tanggung jawab, kejujuran, dan keikhlasan.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">3.</span>
+        Mendahulukan musyawarah dan mufakat dalam setiap pengambilan keputusan yang menyangkut kepentingan bersama.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">4.</span>
+        Saling mengingatkan dengan cara yang baik apabila salah satu di antara kami melenceng dari amanah ini.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">5.</span>
+        Menjaga kerahasiaan informasi internal yayasan dan tidak menyebarkan hal-hal yang dapat merugikan organisasi.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">6.</span>
+        Hadir dan aktif dalam setiap kegiatan penting yayasan selama tidak ada halangan yang syar'i.
+      </div>
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- PASAL 3 -->
+    <div class="pasal">
+      <div class="pasal-judul">✦ Pasal 3 · Komitmen Amanah ✦</div>
+      <div class="pasal-sub">Kami berkomitmen untuk tidak:</div>
+
+      <div class="komitmen-item">
+        <span class="komitmen-no">1.</span>
+        Menggunakan nama, aset, atau program yayasan untuk kepentingan pribadi atau kelompok di luar kesepakatan bersama.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">2.</span>
+        Mengambil keputusan sepihak yang berdampak besar tanpa musyawarah bersama para pihak yang terkait.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">3.</span>
+        Memecah belah kebersamaan ini dengan pertikaian yang bersumber dari ego dan kepentingan pribadi.
+      </div>
+      <div class="komitmen-item">
+        <span class="komitmen-no">4.</span>
+        Meninggalkan amanah ini tanpa pemberitahuan yang layak dan proses serah terima yang bertanggung jawab.
+      </div>
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- SUMPAH BERSAMA -->
+    <div class="sumpah">
+      <div class="sumpah-label">✦ Ikrar & Sumpah Bersama ✦</div>
+      <div class="sumpah-teks">
+        <em>"Kami bersaksi kepada Allah Subhanahu wa Ta'ala<br>
+        bahwa kami menerima amanah ini dengan <strong>ikhlas</strong>,<br>
+        akan menjalankannya dengan <strong>jujur</strong>,<br>
+        menjaganya dengan <strong>setia</strong>,<br>
+        dan tidak akan mengkhianatinya<br>
+        selama kami masih mampu mengembannya.<br><br>
+        Wallahi — Billahi — Tallahi."</em>
+      </div>
+    </div>
+
+    <!-- PASAL 4 -->
+    <div class="pasal">
+      <div class="pasal-judul">✦ Pasal 4 · Konsekuensi Pelanggaran ✦</div>
+      <div class="konsekuensi">
+        <div class="konsekuensi-label">⚠ Apabila Salah Satu Pihak Melanggar</div>
+        <div class="konsekuensi-item">Akan diselesaikan terlebih dahulu melalui musyawarah internal secara kekeluargaan.</div>
+        <div class="konsekuensi-item">Apabila musyawarah tidak menghasilkan penyelesaian, Pendiri berhak mencabut amanah jabatan yang bersangkutan.</div>
+        <div class="konsekuensi-item">Seluruh dokumen, aset, dan program yang diemban wajib diserahterimakan secara penuh tanpa syarat.</div>
+        <div class="konsekuensi-item">Pertanggungjawaban moral dan spiritual tetap menjadi urusan masing-masing pribadi kepada Allah SWT.</div>
+      </div>
+    </div>
+
+    <hr class="garis-tipis">
+
+    <!-- Penutup -->
+    <div class="penutup-dok">
+      Kontrak komitmen ini dibuat dengan kesadaran penuh,<br>
+      ditandatangani oleh keempat pihak sebagai bukti kesepakatan bersama.<br>
+      Semoga Allah meridhoi langkah kami, menguatkan ikatan kami,<br>
+      dan menjadikan perjuangan ini bernilai ibadah di sisi-Nya.<br><br>
+      <em>Aamiin Ya Rabbal 'Alamin.</em>
+    </div>
+
+    <!-- Cap -->
+    <div class="meterai-wrap">
+      <div class="meterai">
+        <div class="meterai-teks">
+          BAHULA<br>TANI<br>✦<br>NUSANTARA<br>2026
+        </div>
+      </div>
+    </div>
+
+    <!-- TTD 4 Orang -->
+    <div class="ttd-section">
+      <div class="ttd-tanggal">
+        Dibuat di Kampung Pasir Ipis, Sukabumi<br>
+        Pada hari .............. tanggal .................. 2026
+      </div>
+
+      <div class="ttd-grid-atas">
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Pendiri<br>Pihak I</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">HUDRI</div>
+          <div class="ttd-nama-lengkap">Moch Malvie Alkhudriyah</div>
+          <div class="ttd-jabatan">Pendiri</div>
+        </div>
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Ketua Pengurus<br>Pihak II</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">MUHAMAD KOMARUDJAMAN</div>
+          <div class="ttd-nama-lengkap">Ustadz Komar</div>
+          <div class="ttd-jabatan">Ketua Pengurus</div>
+        </div>
+
+      </div>
+
+      <div class="ttd-grid-bawah">
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Pengawas<br>Pihak III</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">USTADZ KAKAT</div>
+          <div class="ttd-jabatan">Pengawas</div>
+        </div>
+
+        <div class="ttd-box">
+          <div class="ttd-label-kecil">Kabid Humas & Kemitraan<br>Pihak IV</div>
+          <div class="ttd-garis"></div>
+          <div class="ttd-nama">USTADZ AYEH</div>
+          <div class="ttd-jabatan">Kabid Humas & Kemitraan</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+    <button class="btn-cetak-dok" onclick="printDok('dok4')">🖨️ &nbsp;Cetak Kontrak Ini</button>
+  </div>
+
+  <div class="logout-wrap">
+    <button class="btn-logout" onclick="logout()">🔒 &nbsp;Kunci Halaman</button>
+  </div>
+
+</div>
+
+<script>
+function checkPassword() {
+  const input = document.getElementById('pwd-input').value;
+  const error = document.getElementById('lock-error');
+  if (input === 'BTN2026') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('main-content').classList.add('unlocked');
+    sessionStorage.setItem('btn_unlocked', '1');
+  } else {
+    error.classList.add('show');
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+    setTimeout(() => error.classList.remove('show'), 3000);
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('btn_unlocked');
+  document.getElementById('lock-screen').style.display = 'flex';
+  document.getElementById('main-content').classList.remove('unlocked');
+  document.getElementById('pwd-input').value = '';
+}
+
+function printDok(id) {
+  const el = document.getElementById(id);
+  const win = window.open('', '_blank');
+  win.document.write('<html><head><title>Cetak Dokumen BTN</title>');
+  win.document.write('<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">');
+  win.document.write('<style>');
+  win.document.write(document.querySelector('style').textContent);
+  win.document.write('body{background:white;padding:20px;} #lock-screen{display:none!important;}');
+  win.document.write('</style></head><body>');
+  win.document.write(el.querySelector('.piagam, .dokumen').outerHTML);
+  win.document.write('</body></html>');
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 600);
+}
+
+// Auto unlock jika session masih aktif
+window.onload = function() {
+  if (sessionStorage.getItem('btn_unlocked') === '1') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('main-content').classList.add('unlocked');
+  }
+  document.getElementById('pwd-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+}
+</script>
+</body>
+</html>
