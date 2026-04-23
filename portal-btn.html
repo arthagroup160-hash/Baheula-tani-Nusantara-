@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Operasional — Bahula Tani Nusantara</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --hijau-tua: #071a08;
+  --hijau-gelap: #0a2210;
+  --hijau: #0f3318;
+  --hijau-muda: #1a5c1a;
+  --emas: #c9a84c;
+  --emas-muda: #e8c96a;
+  --emas-gelap: #8b6914;
+  --putih: #f5f0e8;
+  --putih-bersih: #fafaf8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--hijau-tua);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--putih);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(26,92,26,0.1) 0%, transparent 55%);
+}
+
+/* ============ DASHBOARD ============ */
+#dashboard { display: block; }
+.page-doc { display: none; position: fixed; inset: 0; z-index: 200; overflow-y: auto; background: var(--hijau-tua); }
+.page-doc.active { display: block; }
+
+/* ============ PORTAL HEADER ============ */
+.portal-header {
+  text-align: center;
+  padding: 50px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 60%),
+    repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(201,168,76,0.02) 30px, rgba(201,168,76,0.02) 31px);
+}
+
+.portal-header-inner { position: relative; z-index: 1; }
+
+.portal-emblem {
+  font-size: 56px;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.3)); }
+  50% { filter: drop-shadow(0 0 35px rgba(201,168,76,0.5)); }
+}
+
+.portal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.7);
+  margin-bottom: 16px;
+}
+
+.portal-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(24px, 5vw, 42px);
+  font-weight: 900;
+  color: var(--putih-bersih);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.portal-header h1 span { color: var(--emas-muda); }
+
+.portal-header p {
+  font-size: 15px;
+  color: rgba(245,240,232,0.5);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.portal-header .owner {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(201,168,76,0.45);
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--emas), transparent);
+  margin: 30px 20px 0;
+}
+
+/* ============ GRID DOKUMEN ============ */
+.docs-section {
+  padding: 40px 20px 60px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.docs-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.4);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.doc-card {
+  background: rgba(10,34,16,0.75);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 16px;
+  padding: 24px 22px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.doc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.doc-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  transition: all 0.4s;
+}
+
+.doc-card:hover {
+  border-color: rgba(201,168,76,0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.1);
+  background: rgba(15,51,24,0.85);
+}
+
+.doc-card:hover::before { opacity: 1; }
+.doc-card:hover::after { bottom: -30px; right: -30px; width: 160px; height: 160px; }
+
+.doc-card-num {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(201,168,76,0.4);
+  text-transform: uppercase;
+}
+
+.doc-card-icon {
+  font-size: 36px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.doc-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--emas-muda);
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+}
+
+.doc-card-desc {
+  font-size: 13px;
+  color: rgba(245,240,232,0.5);
+  line-height: 1.7;
+  flex: 1;
+}
+
+.doc-card-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+
+.doc-card-action .open-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--emas);
+}
+
+.doc-card-action .arrow {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--emas-gelap), var(--emas));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--hijau-tua);
+  transition: transform 0.3s;
+}
+
+.doc-card:hover .arrow { transform: translateX(3px); }
+
+/* ============ BACK BUTTON ============ */
+.back-bar {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  background: rgba(7,26,8,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--emas);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.back-btn:hover {
+  background: rgba(201,168,76,0.18);
+  border-color: rgba(201,168,76,0.5);
+}
+
+.back-bar-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(201,168,76,0.55);
+  text-transform: uppercase;
+  text-align: center;
+  flex: 1;
+}
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(201,168,76,0.5);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.print-btn:hover { border-color: rgba(201,168,76,0.5); color: rgba(201,168,76,0.85); }
+
+/* ============ DOC WRAPPER ============ */
+.doc-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 30px 16px 60px;
+}
+
+/* ============ SHARED DOC STYLES ============ */
+.kop {
+  background: linear-gradient(135deg, var(--hijau-gelap), var(--hijau));
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.kop-gold { height: 4px; background: linear-gradient(90deg, transparent, var(--emas), var(--emas-muda), var(--emas), transparent); }
+
+.kop-inner {
+  padding: 22px 28px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+.kop-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(201,168,76,0.02) 15px, rgba(201,168,76,0.02) 16px);
+}
+
+.kop-emblem2 {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(201,168,76,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0; position: relative; z-index: 1;
+}
+
+.kop-text { position: relative; z-index: 1; flex: 1; }
+.kop-text h1 { font-family: 'Cinzel', serif; font-size: clamp(15px,2.5vw,20px); font-weight: 900; color: var(--emas-muda); letter-spacing: 1px; line-height: 1.2; }
+.kop-text p { font-size: 9px; color: rgba(201,168,76,0.5); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px; }
+
+.kop-judul {
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(201,168,76,0.15);
+  padding: 12px 28px;
+  text-align: center;
+}
+.kop-judul span { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.7); }
+
+.doc-body {
+  background: rgba(10,26,10,0.9);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-top: none;
+  padding: 28px 28px 32px;
+}
+
+.doc-footer-bar {
+  background: linear-gradient(90deg, var(--hijau-gelap), var(--hijau), var(--hijau-gelap));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.doc-footer-bar .tag { font-size: 11px; color: rgba(201,168,76,0.35); font-style: italic; }
+.doc-footer-bar .wa { font-family: 'Cinzel', serif; font-size: 11px; color: rgba(201,168,76,0.5); }
+.gold-bot { height: 3px; background: linear-gradient(90deg, transparent, var(--emas), var(--emas-muda), var(--emas), transparent); border-radius: 0 0 14px 14px; }
+
+/* shared doc content */
+.bab { margin-bottom: 28px; }
+.bab-title {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--emas-muda); margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(201,168,76,0.18);
+  display: flex; align-items: center; gap: 10px;
+}
+.bab-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--emas-gelap), var(--emas));
+  color: var(--hijau-tua); font-family: 'Cinzel', serif; font-weight: 700; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.bab-isi { font-size: 14.5px; color: rgba(245,240,232,0.72); line-height: 1.95; text-align: justify; }
+.bab-isi p { margin-bottom: 10px; }
+.bab-isi ol { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.bab-isi ul { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.bab-isi ul li { display: flex; gap: 10px; align-items: flex-start; }
+.bab-isi ul li::before { content: '◆'; color: var(--emas); font-size: 8px; margin-top: 8px; flex-shrink: 0; }
+
+.info-box {
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.22);
+  border-left: 3px solid var(--emas);
+  border-radius: 8px; padding: 14px 18px; margin: 12px 0;
+  font-size: 14px; color: rgba(245,240,232,0.7); line-height: 1.85;
+}
+.info-box strong { color: var(--emas-muda); }
+
+.green-box {
+  background: rgba(34,120,34,0.1);
+  border: 1px solid rgba(100,200,100,0.2);
+  border-left: 3px solid #3a9a3a;
+  border-radius: 8px; padding: 14px 18px; margin: 12px 0;
+  font-size: 14px; color: rgba(245,240,232,0.7); line-height: 1.85;
+}
+.green-box strong { color: #6ee87a; }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+.data-table thead tr { background: rgba(201,168,76,0.1); }
+.data-table thead th { padding: 9px 13px; text-align: left; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.7); border-bottom: 1px solid rgba(201,168,76,0.2); }
+.data-table tbody tr { border-bottom: 1px solid rgba(201,168,76,0.06); }
+.data-table tbody td { padding: 9px 13px; color: rgba(245,240,232,0.72); vertical-align: top; line-height: 1.6; }
+.data-table tbody td:first-child { color: var(--emas-muda); font-family: 'Cinzel', serif; font-size: 12px; white-space: nowrap; }
+.total-row td { background: rgba(201,168,76,0.12) !important; font-family: 'Cinzel', serif; font-weight: 700; color: var(--emas-muda) !important; border-top: 1px solid rgba(201,168,76,0.3); }
+
+/* field inputs */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.field-row.full { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.5); }
+.field input, .field select, .field textarea {
+  background: rgba(7,26,8,0.8); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px;
+  padding: 10px 13px; color: var(--putih); font-family: 'Cormorant Garamond', serif; font-size: 15px; outline: none;
+  transition: border-color 0.3s; width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(201,168,76,0.55); }
+.field input::placeholder, .field textarea::placeholder { color: rgba(245,240,232,0.2); font-style: italic; }
+.field select option { background: #0a2210; }
+.field textarea { resize: vertical; min-height: 65px; }
+
+.radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.radio-item {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(7,26,8,0.7); border: 1px solid rgba(201,168,76,0.18); border-radius: 8px;
+  padding: 8px 12px; cursor: pointer; transition: all 0.2s; font-size: 13.5px; color: rgba(245,240,232,0.7);
+}
+.radio-item:hover { border-color: rgba(201,168,76,0.4); }
+.radio-item input { width: 15px; height: 15px; accent-color: var(--emas); flex-shrink: 0; padding: 0; border: none; background: transparent; box-shadow: none; }
+
+/* iuran */
+.iuran-box {
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+  border: 1.5px solid rgba(201,168,76,0.3); border-radius: 10px;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;
+}
+.iuran-box .il { }
+.iuran-box .il .lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(201,168,76,0.55); margin-bottom: 3px; }
+.iuran-box .il .amt { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 900; color: var(--emas-muda); }
+.iuran-box .il .nt { font-size: 11px; color: rgba(245,240,232,0.35); font-style: italic; }
+.iuran-input-w { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.iuran-input-w label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.45); }
+.iuran-input-w input { width: 150px; background: rgba(7,26,8,0.9); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 9px 12px; color: var(--emas-muda); font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; outline: none; text-align: right; }
+
+/* ttd */
+.ttd-section { margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(201,168,76,0.12); }
+.ttd-intro { font-size: 13px; color: rgba(245,240,232,0.5); text-align: center; margin-bottom: 20px; font-style: italic; }
+.ttd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.ttd-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.ttd-box { text-align: center; }
+.ttd-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(201,168,76,0.45); margin-bottom: 4px; }
+.ttd-jabatan { font-family: 'Cinzel', serif; font-size: 11px; color: var(--emas); margin-bottom: 4px; }
+.ttd-space { height: 60px; border-bottom: 1px solid rgba(201,168,76,0.25); margin-bottom: 6px; }
+.ttd-name { font-size: 12px; color: rgba(245,240,232,0.4); font-style: italic; }
+.ttd-role { font-size: 10px; color: rgba(245,240,232,0.3); margin-top: 2px; }
+.ttd-input { background: transparent; border: none; border-bottom: 1px solid rgba(201,168,76,0.25); padding: 3px 6px; color: var(--putih); font-family: 'Cormorant Garamond', serif; font-size: 14px; text-align: center; width: 100%; outline: none; }
+
+/* timeline */
+.timeline { display: flex; flex-direction: column; position: relative; padding-left: 28px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 16px; bottom: 16px; width: 1px; background: linear-gradient(to bottom, var(--emas), rgba(201,168,76,0.1)); }
+.tl-item { position: relative; padding: 0 0 18px 18px; }
+.tl-dot { position: absolute; left: -20px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, var(--emas-gelap), var(--emas)); border: 2px solid var(--hijau-tua); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+.tl-phase { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--emas); margin-bottom: 3px; }
+.tl-title { font-family: 'Cinzel', serif; font-size: 13px; color: var(--putih); font-weight: 600; margin-bottom: 5px; }
+.tl-desc { font-size: 13.5px; color: rgba(245,240,232,0.58); line-height: 1.75; }
+
+/* perjanjian pihak */
+.pihak-box { background: rgba(7,26,8,0.7); border: 1px solid rgba(201,168,76,0.18); border-left: 3px solid var(--emas); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; }
+.pihak-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--emas); margin-bottom: 9px; }
+.pihak-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 14px; color: rgba(245,240,232,0.72); }
+.pihak-row .k { min-width: 120px; color: rgba(245,240,232,0.45); font-size: 13px; flex-shrink: 0; }
+.pihak-row .v { font-weight: 600; }
+.pihak-row input { background: transparent; border: none; border-bottom: 1px solid rgba(201,168,76,0.25); padding: 2px 5px; color: var(--putih); font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 600; outline: none; flex: 1; transition: border-color 0.3s; }
+.pihak-row input:focus { border-color: rgba(201,168,76,0.6); }
+.pihak-row input::placeholder { color: rgba(245,240,232,0.2); font-style: italic; font-weight: 300; }
+.pihak-disebut { margin-top: 9px; padding-top: 7px; border-top: 1px dashed rgba(201,168,76,0.12); font-size: 12.5px; color: rgba(201,168,76,0.5); font-style: italic; }
+
+/* btn apply */
+.btn-apply {
+  padding: 12px 24px; background: linear-gradient(135deg, var(--emas-gelap), var(--emas), var(--emas-gelap));
+  border: none; border-radius: 9px; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px;
+  color: var(--hijau-tua); font-weight: 700; cursor: pointer; margin-top: 6px; transition: opacity 0.3s;
+}
+.btn-apply:hover { opacity: 0.88; }
+
+/* pernyataan */
+.perny-box { background: rgba(7,26,8,0.6); border: 1px solid rgba(201,168,76,0.12); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.perny-box p { font-size: 13.5px; color: rgba(245,240,232,0.6); line-height: 1.85; margin-bottom: 12px; }
+.perny-box p strong { color: var(--emas-muda); }
+.check-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13px; color: rgba(245,240,232,0.62); line-height: 1.6; cursor: pointer; }
+.check-item input { width: 15px; height: 15px; accent-color: var(--emas); flex-shrink: 0; margin-top: 2px; }
+
+/* komisi tabel */
+.komisi-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+.komisi-table thead tr { background: rgba(201,168,76,0.1); }
+.komisi-table thead th { padding: 9px 13px; text-align: left; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.7); border-bottom: 1px solid rgba(201,168,76,0.2); }
+.komisi-table tbody tr { border-bottom: 1px solid rgba(201,168,76,0.06); }
+.komisi-table tbody td { padding: 9px 13px; color: rgba(245,240,232,0.72); }
+.komisi-table tbody td:last-child { font-family: 'Cinzel', serif; color: var(--emas-muda); font-weight: 600; }
+
+/* ============ STEPS (SOP) ============ */
+.sop-steps { display: flex; flex-direction: column; gap: 14px; }
+.sop-step { display: flex; gap: 14px; align-items: flex-start; }
+.sop-step-num { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--emas-gelap), var(--emas)); color: var(--hijau-tua); font-family: 'Cinzel', serif; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(201,168,76,0.2); }
+.sop-step-body h4 { font-family: 'Cinzel', serif; font-size: 13px; color: var(--emas-muda); margin-bottom: 4px; }
+.sop-step-body p { font-size: 13.5px; color: rgba(245,240,232,0.62); line-height: 1.75; }
+
+/* cabang card */
+.cabang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin: 12px 0; }
+.cabang-card { background: rgba(10,34,16,0.7); border: 1px solid rgba(201,168,76,0.18); border-radius: 10px; padding: 16px; text-align: center; }
+.cabang-card .icon { font-size: 28px; margin-bottom: 8px; }
+.cabang-card .title { font-family: 'Cinzel', serif; font-size: 12px; color: var(--emas-muda); margin-bottom: 6px; letter-spacing: 0.5px; }
+.cabang-card .desc { font-size: 12.5px; color: rgba(245,240,232,0.52); line-height: 1.65; }
+.cabang-card .badge { display: inline-block; margin-top: 8px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.28); border-radius: 20px; padding: 2px 10px; font-family: 'Cinzel', serif; font-size: 10px; color: var(--emas); }
+
+/* wa kirim */
+.wa-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #1a5c1a, #2d7a2d); border: none; border-radius: 9px; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; color: white; font-weight: 700; cursor: pointer; margin-top: 14px; transition: opacity 0.3s; }
+.wa-btn:hover { opacity: 0.88; }
+
+@media print {
+  body { background: white !important; color: black !important; }
+  .back-bar, #dashboard { display: none !important; }
+  .page-doc { position: static; background: white; }
+  .kop { background: #0a2210 !important; }
+  .doc-body { background: white !important; border: 1px solid #ccc; }
+  .bab-isi, .tl-desc { color: #333 !important; }
+}
+
+@media (max-width: 500px) {
+  .field-row { grid-template-columns: 1fr; }
+  .ttd-grid, .ttd-grid-3 { grid-template-columns: 1fr; }
+  .docs-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard">
+  <div class="portal-header">
+    <div class="portal-header-inner">
+      <div class="portal-emblem">🌿</div>
+      <div class="portal-badge">✦ Portal Operasional Pribadi ✦</div>
+      <h1>BAHULA TANI<br><span>NUSANTARA</span></h1>
+      <p>"Jaga Ngariksa Leweung — Balik Ka Akar Menuju Masa Depan"</p>
+      <div class="owner">Dikelola oleh: Moch. Malvie Alkhudriyah · HUDRI</div>
+    </div>
+  </div>
+  <div class="gold-line"></div>
+
+  <div class="docs-section">
+    <div class="docs-label">✦ Pilih Dokumen ✦</div>
+    <div class="docs-grid">
+
+      <div class="doc-card" onclick="openDoc('kta')">
+        <div class="doc-card-num">Dokumen 01</div>
+        <div class="doc-card-icon">💳</div>
+        <div class="doc-card-title">KTA Premium BTN</div>
+        <div class="doc-card-desc">Kartu Tanda Anggota resmi BTN dengan desain mewah foil emas. Isi data & cetak langsung.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('rab')">
+        <div class="doc-card-num">Dokumen 02</div>
+        <div class="doc-card-icon">📊</div>
+        <div class="doc-card-title">RAB & Tanda Terima</div>
+        <div class="doc-card-desc">Rencana Anggaran Biaya lengkap + Tanda Terima Sementara untuk anggota baru.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('brosur')">
+        <div class="doc-card-num">Dokumen 03</div>
+        <div class="doc-card-icon">📣</div>
+        <div class="doc-card-title">Brosur 12 Keuntungan</div>
+        <div class="doc-card-desc">Brosur digital premium berisi 12 keuntungan menjadi anggota BTN. Siap viral di medsos.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('formulir')">
+        <div class="doc-card-num">Dokumen 04</div>
+        <div class="doc-card-icon">📝</div>
+        <div class="doc-card-title">Formulir Pendaftaran</div>
+        <div class="doc-card-desc">Formulir pendaftaran anggota yang simpel dan mudah — bisa diisi petani desa sekalipun.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('perjanjian')">
+        <div class="doc-card-num">Dokumen 05</div>
+        <div class="doc-card-icon">🤝</div>
+        <div class="doc-card-title">Surat Perjanjian</div>
+        <div class="doc-card-desc">Surat Perjanjian Kerjasama resmi untuk Agen Lapangan dan Koordinator Wilayah BTN.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('proposal')">
+        <div class="doc-card-num">Dokumen 06</div>
+        <div class="doc-card-icon">📋</div>
+        <div class="doc-card-title">Proposal Sosialisasi & Rekrutmen</div>
+        <div class="doc-card-desc">Proposal resmi sosialisasi & rekrutmen anggota BTN se-Jawa Barat 2026. Biaya Rp 15.000 = cetak KTA.</div>
+        <div class="doc-card-action">
+          <span class="open-btn">Buka Dokumen</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('sop')" style="border-color:rgba(201,168,76,0.3); background: linear-gradient(135deg, rgba(15,51,24,0.8), rgba(10,34,16,0.8));">
+        <div class="doc-card-num" style="color:rgba(201,168,76,0.65);">Dokumen 07</div>
+        <div class="doc-card-icon">⚙️</div>
+        <div class="doc-card-title">SOP Keanggotaan & Cabang</div>
+        <div class="doc-card-desc">Standar Operasional Prosedur sistem keanggotaan, pembukaan cabang, dan tata kelola wilayah BTN.</div>
+        <div class="doc-card-action">
+          <span class="open-btn" style="color:var(--emas-muda);">Buka Dokumen</span>
+          <span class="arrow" style="background: linear-gradient(135deg, #1a5c1a, #3a9a3a); color:white;">→</span>
+        </div>
+      </div>
+
+      <div class="doc-card" onclick="openDoc('rtrw')" style="border-color:rgba(100,150,255,0.3); background: linear-gradient(135deg, rgba(30,80,180,0.12), rgba(10,34,16,0.8));">
+        <div class="doc-card-num" style="color:rgba(144,184,255,0.6);">Dokumen 08</div>
+        <div class="doc-card-icon">🏘️</div>
+        <div class="doc-card-title">Proposal Khusus RT/RW</div>
+        <div class="doc-card-desc">Proposal eksklusif untuk RT/RW — termasuk program Internet Kampung BUMR & proyeksi kas bulanan.</div>
+        <div class="doc-card-action">
+          <span class="open-btn" style="color:#90b8ff;">Buka Dokumen</span>
+          <span class="arrow" style="background: linear-gradient(135deg, #2040a0, #4a80ff); color:white;">→</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ HALAMAN DOKUMEN ============ -->
+
+<!-- DOC 1: KTA -->
+<div class="page-doc" id="doc-kta">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">KTA Premium BTN</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop">
+      <div class="kop-gold"></div>
+      <div class="kop-inner">
+        <div class="kop-emblem2">🌿</div>
+        <div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>Jaga Ngariksa Leweung · Sukabumi · Jawa Barat</p></div>
+      </div>
+      <div class="kop-judul"><span>✦ Kartu Tanda Anggota (KTA) ✦</span></div>
+    </div>
+    <div class="doc-body">
+      <!-- KTA Preview -->
+      <div style="background:linear-gradient(135deg,#0a2210,#1a4a1a);border:1px solid rgba(201,168,76,0.4);border-radius:14px;padding:24px 20px;max-width:380px;margin:0 auto 24px;position:relative;overflow:hidden;">
+        <div style="height:3px;background:linear-gradient(90deg,transparent,var(--emas),var(--emas-muda),var(--emas),transparent);margin-bottom:16px;"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(201,168,76,0.5);display:flex;align-items:center;justify-content:center;font-size:18px;">🌿</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--emas-muda);letter-spacing:1px;">BAHULA TANI</div>
+            <div style="font-size:8px;color:rgba(201,168,76,0.55);letter-spacing:2.5px;text-transform:uppercase;">NUSANTARA</div>
+          </div>
+          <div style="margin-left:auto;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);border-radius:5px;padding:3px 9px;font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--emas);">ANGGOTA RESMI</div>
+        </div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,0.45);margin-bottom:3px;">Nama Anggota</div>
+        <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--putih-bersih);margin-bottom:4px;" id="kta-disp-nama">NAMA ANGGOTA</div>
+        <div style="font-size:11px;color:rgba(201,168,76,0.65);font-style:italic;" id="kta-disp-wilayah">Jawa Barat</div>
+        <div style="margin-top:12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(245,240,232,0.35);" id="kta-disp-nomor">BTN · 2026 · 00001</div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Nama Lengkap</label><input type="text" id="kta-nama" placeholder="Ahmad Supriatna"></div>
+        <div class="field"><label>Wilayah / Kabupaten</label><input type="text" id="kta-wilayah" placeholder="Kab. Sukabumi, Jabar"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Nomor Anggota</label><input type="text" id="kta-nomor" placeholder="00001"></div>
+        <div class="field"><label>Tahun</label><input type="text" id="kta-tahun" value="2026" maxlength="4"></div>
+      </div>
+      <button class="btn-apply" onclick="updateKTA()">✦ Terapkan ke KTA</button>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 2: RAB & TANDA TERIMA -->
+<div class="page-doc" id="doc-rab">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">RAB & Tanda Terima</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>Rencana Anggaran Biaya & Tanda Terima</p></div></div><div class="kop-judul"><span>✦ RAB Program KTA + Tanda Terima Sementara ✦</span></div></div>
+    <div class="doc-body">
+      <div class="bab">
+        <div class="bab-title"><div class="bab-num">A</div> Alokasi Per KTA = Rp 15.000</div>
+        <div class="bab-isi">
+          <table class="data-table">
+            <thead><tr><th>Komponen</th><th>Per KTA</th><th>Per 1.000 KTA</th></tr></thead>
+            <tbody>
+              <tr><td>Cetak KTA (PVC foil emas)</td><td>Rp 6.000</td><td>Rp 6.000.000</td></tr>
+              <tr><td>Komisi Agen Lapangan</td><td>Rp 1.500</td><td>Rp 1.500.000</td></tr>
+              <tr><td>Komisi Koordinator</td><td>Rp 750</td><td>Rp 750.000</td></tr>
+              <tr><td>Kas BUMR RT/RW</td><td>Rp 500</td><td>Rp 500.000</td></tr>
+              <tr><td>Operasional sosialisasi</td><td>Rp 1.000</td><td>Rp 1.000.000</td></tr>
+              <tr class="total-row"><td>KAS BERSIH BTN</td><td>Rp 5.250</td><td>Rp 5.250.000</td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">💡 Modal awal hanya <strong>Rp 500.000</strong> — selembaran tanda terima + stempel + ATK + transport perdana.</div>
+        </div>
+      </div>
+      <div class="bab">
+        <div class="bab-title"><div class="bab-num">B</div> Tanda Terima Sementara</div>
+        <div class="bab-isi">
+          <div class="field-row">
+            <div class="field"><label>Nama Anggota</label><input type="text" id="tt-nama" placeholder="Nama lengkap"></div>
+            <div class="field"><label>No. HP / WA</label><input type="text" id="tt-hp" placeholder="08xx"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Kampung / Desa</label><input type="text" id="tt-desa" placeholder="Kp. ..."></div>
+            <div class="field"><label>Kabupaten</label><input type="text" id="tt-kab" placeholder="Kab. ..."></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>No. Pendaftaran</label><input type="text" id="tt-nomor" placeholder="00001"></div>
+            <div class="field"><label>Jumlah Iuran (Rp)</label><input type="number" id="tt-iuran" value="15000"></div>
+          </div>
+          <button class="btn-apply" onclick="kirimTT()">📱 Kirim via WhatsApp</button>
+        </div>
+      </div>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 3: BROSUR -->
+<div class="page-doc" id="doc-brosur">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">Brosur 12 Keuntungan</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>Brosur Keanggotaan Resmi</p></div></div><div class="kop-judul"><span>✦ 12 Keuntungan Menjadi Anggota BTN ✦</span></div></div>
+    <div class="doc-body">
+      <div class="info-box" style="text-align:center;margin-bottom:20px;">Berlaku <strong>per kepala</strong> — bukan per KK. Setiap jiwa punya hak yang sama.</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+          <div style="font-size:22px;flex-shrink:0;">🏡</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bagian Keluarga Besar BTN</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Bergabung dalam gerakan petani Jawa Barat yang bersatu dan saling mendukung.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+          <div style="font-size:22px;flex-shrink:0;">💰</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Pinjaman Modal Usaha</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Akses permodalan usaha tani dengan syarat mudah dan proses sederhana.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+          <div style="font-size:22px;flex-shrink:0;">🎁</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bantuan Modal Cuma-Cuma</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Potensi mendapat bantuan modal tanpa pengembalian bagi anggota yang memenuhi kriteria.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+          <div style="font-size:22px;flex-shrink:0;">🌱</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bantuan Bibit</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Setiap anggota yang mengajukan berhak mendapat bibit pilihan BTN.</div><div style="display:inline-block;margin-top:5px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:2px 9px;font-family:'Cinzel',serif;font-size:9px;color:#e8c96a;">✦ PASTI DIBERIKAN</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div>
+          <div style="font-size:22px;flex-shrink:0;">🎓</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bantuan Pendidikan</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Anak anggota yang layak dibantu biaya sekolahnya oleh BTN.</div><div style="display:inline-block;margin-top:5px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:2px 9px;font-family:'Cinzel',serif;font-size:9px;color:#e8c96a;">✦ PASTI DIBERIKAN</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>
+          <div style="font-size:22px;flex-shrink:0;">🏥</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bantuan Darurat Kesehatan</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">BTN hadir saat anggota menghadapi kondisi darurat kesehatan.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">7</div>
+          <div style="font-size:22px;flex-shrink:0;">🏠</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Bantuan Bedah Rumah RTLH</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Khusus pengajuan RT/RW untuk anggota dengan rumah tidak layak huni.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">8</div>
+          <div style="font-size:22px;flex-shrink:0;">🏘️</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Perhatian Khusus Kampung</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Kampung ≥100 anggota mendapat program prioritas & kas BUMR RT/RW.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">9</div>
+          <div style="font-size:22px;flex-shrink:0;">📚</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Pelatihan & Workshop Gratis</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Akses pelatihan pertanian modern dan kewirausahaan tanpa biaya.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">10</div>
+          <div style="font-size:22px;flex-shrink:0;">🛒</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Jaringan Pasar Hasil Panen</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">BTN bantu jual hasil panen ke jaringan luas — bebas dari tengkulak.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">11</div>
+          <div style="font-size:22px;flex-shrink:0;">🕌</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Santunan Duka</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">BTN hadir dengan santunan saat anggota atau keluarga inti berpulang.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(10,34,16,0.6);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#8b6914,#c9a84c);color:#071a08;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">12</div>
+          <div style="font-size:22px;flex-shrink:0;">📋</div>
+          <div><div style="font-family:'Cinzel',serif;font-size:12px;color:#e8c96a;margin-bottom:4px;">Prioritas Program Pemerintah</div><div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Diprioritaskan dalam akses subsidi, bantuan, dan KUR perbankan.</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,rgba(30,80,180,0.12),rgba(10,34,16,0.8));border:1px solid rgba(100,150,255,0.35);border-radius:10px;padding:14px 16px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2040a0,#4a80ff);color:white;font-family:'Cinzel',serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">13</div>
+          <div style="font-size:22px;flex-shrink:0;">🌐</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:#90b8ff;margin-bottom:4px;">Internet RT/RW Khusus Pemegang KTA</div>
+            <div style="font-size:13px;color:rgba(245,240,232,0.6);line-height:1.65;">Akses internet murah via BUMR RT/RW — dilengkapi <strong style="color:#90b8ff;">filter anti judi online</strong> & konten negatif. Internet sehat, kampung aman.</div>
+            <div style="display:inline-block;margin-top:5px;background:rgba(100,150,255,0.12);border:1px solid rgba(100,150,255,0.3);border-radius:20px;padding:2px 9px;font-family:'Cinzel',serif;font-size:9px;color:#90b8ff;">🌐 KHUSUS PEMEGANG KTA</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="green-box" style="margin-top:18px;text-align:center;">
+        💳 Iuran hanya <strong>Rp 15.000</strong> — seikhlasnya lebih<br>
+        📱 Daftar: WA <strong>0838-7166-6136</strong>
+      </div>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 4: FORMULIR -->
+<div class="page-doc" id="doc-formulir">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">Formulir Pendaftaran</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>Formulir Pendaftaran Anggota Resmi</p></div></div><div class="kop-judul"><span>✦ Formulir Pendaftaran Anggota ✦</span></div></div>
+    <div class="doc-body">
+      <div class="bab"><div class="bab-title"><div class="bab-num">1</div> Data Diri</div>
+        <div class="field-row full"><div class="field"><label>Nama Lengkap *</label><input type="text" id="f-nama" placeholder="Nama sesuai KTP"></div></div>
+        <div class="field-row">
+          <div class="field"><label>Tempat Lahir</label><input type="text" id="f-ttl-t" placeholder="Kota/Kab"></div>
+          <div class="field"><label>Tanggal Lahir</label><input type="date" id="f-ttl-d"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Jenis Kelamin</label><div class="radio-group"><label class="radio-item"><input type="radio" name="jk" value="L"> Laki-laki</label><label class="radio-item"><input type="radio" name="jk" value="P"> Perempuan</label></div></div>
+          <div class="field"><label>Pekerjaan</label><select id="f-pkrj"><option value="">— Pilih —</option><option>Petani</option><option>Peternak</option><option>Buruh Tani</option><option>Pedagang</option><option>Ibu Rumah Tangga</option><option>Lainnya</option></select></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>No. HP / WA *</label><input type="tel" id="f-hp" placeholder="08xx"></div>
+          <div class="field"><label>No. KTP (opsional)</label><input type="text" id="f-ktp" placeholder="16 digit NIK" maxlength="16"></div>
+        </div>
+      </div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">2</div> Alamat</div>
+        <div class="field-row full"><div class="field"><label>Kampung / Dusun *</label><input type="text" id="f-kmp" placeholder="Kp. ..."></div></div>
+        <div class="field-row">
+          <div class="field"><label>RT</label><input type="text" id="f-rt" placeholder="001"></div>
+          <div class="field"><label>RW</label><input type="text" id="f-rw" placeholder="008"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Desa / Kelurahan *</label><input type="text" id="f-desa" placeholder="Gunungguruh"></div>
+          <div class="field"><label>Kecamatan *</label><input type="text" id="f-kec" placeholder="Gunungguruh"></div>
+        </div>
+        <div class="field-row full"><div class="field"><label>Kabupaten / Kota *</label><input type="text" id="f-kab" placeholder="Kab. Sukabumi"></div></div>
+      </div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">3</div> Iuran</div>
+        <div class="iuran-box">
+          <div class="il"><div class="lbl">Minimal Iuran</div><div class="amt">Rp 15.000</div><div class="nt">Seikhlasnya lebih</div></div>
+          <div class="iuran-input-w"><label>Jumlah Dibayar (Rp)</label><input type="number" id="f-iuran" value="15000" min="15000"></div>
+        </div>
+      </div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">4</div> Petugas</div>
+        <div class="field-row">
+          <div class="field"><label>Nama Agen</label><input type="text" id="f-agen" placeholder="Nama agen"></div>
+          <div class="field"><label>Nama Koordinator</label><input type="text" id="f-koord" placeholder="Nama koordinator"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>No. Pendaftaran</label><input type="text" id="f-noreg" placeholder="BTN-2026-xxxxx"></div>
+          <div class="field"><label>Tanggal</label><input type="date" id="f-tgl"></div>
+        </div>
+      </div>
+      <button class="wa-btn" onclick="kirimFormulir()">📱 Kirim via WhatsApp</button>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 5: PERJANJIAN -->
+<div class="page-doc" id="doc-perjanjian">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">Surat Perjanjian</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>Surat Perjanjian Kerjasama Resmi</p></div></div><div class="kop-judul"><span>✦ Surat Perjanjian Agen & Koordinator ✦</span></div></div>
+    <div class="doc-body">
+      <div class="bab"><div class="bab-title"><div class="bab-num">I</div> Data Pihak Kedua</div>
+        <div class="field-row">
+          <div class="field"><label>Jenis Perjanjian</label><div class="radio-group"><label class="radio-item"><input type="radio" name="jenis" value="Agen" checked> 🧑‍🌾 Agen</label><label class="radio-item"><input type="radio" name="jenis" value="Koordinator"> 📋 Koordinator</label></div></div>
+        </div>
+        <div class="field-row full"><div class="field"><label>Nama Pihak Kedua</label><input type="text" id="p-nama" placeholder="Nama lengkap"></div></div>
+        <div class="field-row">
+          <div class="field"><label>No. HP / WA</label><input type="text" id="p-hp" placeholder="08xx"></div>
+          <div class="field"><label>Wilayah Kerja</label><input type="text" id="p-wilayah" placeholder="Kec. / Kab. ..."></div>
+        </div>
+        <div class="field-row full"><div class="field"><label>Alamat</label><input type="text" id="p-alamat" placeholder="Kampung, Desa, Kab/Kota"></div></div>
+      </div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">II</div> Ketentuan & Komisi</div>
+        <div class="bab-isi">
+          <table class="komisi-table">
+            <thead><tr><th>Jabatan</th><th>Komisi / KTA</th><th>Bonus Milestone</th></tr></thead>
+            <tbody>
+              <tr><td>Agen Lapangan</td><td>Rp 1.500</td><td>+Rp 50.000 jika ≥100/bln</td></tr>
+              <tr><td>Koordinator Wilayah</td><td>Rp 750</td><td>+Rp 150.000 jika ≥500/bln</td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">⚠️ Komisi dibayar <strong>setelah dana disetorkan & terverifikasi</strong>. Penyetoran max 3 hari kerja setelah diterima.</div>
+        </div>
+      </div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">III</div> Tanda Tangan</div>
+        <div class="ttd-section" style="margin-top:0;padding-top:0;border-top:none;">
+          <div class="ttd-grid">
+            <div class="ttd-box"><div class="ttd-label">Pihak Pertama</div><div class="ttd-jabatan">Pendiri BTN</div><div class="ttd-space"></div><div class="ttd-name">Moch. Malvie Alkhudriyah</div><div class="ttd-role">Pendiri / Pimpinan BTN</div></div>
+            <div class="ttd-box"><div class="ttd-label">Pihak Kedua</div><div class="ttd-jabatan" id="ttd-jenis-label">Agen / Koordinator</div><div class="ttd-space"></div><input class="ttd-input" id="ttd-p2" placeholder="Nama Pihak Kedua"><div class="ttd-role" id="ttd-role-label">Petugas BTN</div></div>
+          </div>
+          <button class="btn-apply" style="margin-top:16px;width:100%;" onclick="syncPerjanjian()">✦ Terapkan Data</button>
+        </div>
+      </div>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 6: PROPOSAL -->
+<div class="page-doc" id="doc-proposal">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">Proposal Sosialisasi & Rekrutmen Anggota</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>No: BTN/PROP/2026/001</p></div></div><div class="kop-judul"><span>✦ Proposal Sosialisasi & Rekrutmen Anggota BTN Se-Jawa Barat ✦</span></div></div>
+    <div class="doc-body">
+      <div class="bab"><div class="bab-title"><div class="bab-num">I</div> Latar Belakang</div><div class="bab-isi"><p>Petani adalah tulang punggung ketahanan pangan bangsa, namun kerap terpinggirkan dari akses permodalan dan layanan sosial yang layak. <strong style="color:#e8c96a;">Bahula Tani Nusantara (BTN)</strong> hadir sebagai gerakan yang berakar dari tanah — bergerak sejak 2013 di kawasan Gunung Guruh yang terancam alih fungsi tambang.</p><p>Kini BTN membuka keanggotaan resmi untuk seluruh masyarakat petani Jawa Barat. Setiap warga yang ingin bergabung mendaftarkan diri sebagai anggota resmi BTN dengan membayar <strong style="color:#e8c96a;">biaya cetak KTA sebesar Rp 15.000</strong> — sebagai syarat untuk mendapatkan Kartu Tanda Anggota dan seluruh fasilitas program BTN.</p></div></div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">II</div> Tujuan</div><div class="bab-isi"><ol><li>Memperkenalkan visi, misi, dan program BTN kepada masyarakat tani Jawa Barat secara luas.</li><li>Merekrut anggota resmi BTN dari 27 kabupaten/kota melalui sistem agen dan koordinator wilayah.</li><li>Menerbitkan KTA resmi kepada setiap anggota terdaftar sebagai identitas dan akses fasilitas BTN.</li><li>Membangun jaringan BUMR di setiap kampung yang mencapai minimal 100 anggota aktif.</li><li>Meletakkan fondasi operasional yayasan BTN yang resmi dan berkelanjutan.</li></ol></div></div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">III</div> Target & Proyeksi</div><div class="bab-isi">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0;">
+          <div style="background:rgba(10,34,16,0.7);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;text-align:center;"><div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--emas-muda);">27</div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,168,76,0.5);">Kab/Kota</div></div>
+          <div style="background:rgba(10,34,16,0.7);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;text-align:center;"><div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--emas-muda);">10.000</div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,168,76,0.5);">Anggota</div></div>
+          <div style="background:rgba(10,34,16,0.7);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;text-align:center;"><div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--emas-muda);">Rp52jt</div><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(201,168,76,0.5);">Kas Bersih</div></div>
+        </div>
+      </div></div>
+      <div class="bab"><div class="bab-title"><div class="bab-num">IV</div> Tahapan Pelaksanaan</div><div class="bab-isi">
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Fase 1 — Bulan 1-2</div><div class="tl-title">Rekrut Koordinator & Sosialisasi Perdana</div><div class="tl-desc">5 kecamatan pertama, target 500 anggota, cetak perlengkapan awal.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Fase 2 — Bulan 3-4</div><div class="tl-title">Ekspansi 15 Kecamatan</div><div class="tl-desc">Cetak KTA perdana, aktivasi BUMR pertama, target 2.000 anggota.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Fase 3 — Bulan 5-6</div><div class="tl-title">Ekspansi 27 Kabupaten/Kota</div><div class="tl-desc">Proses pendirian yayasan resmi, target 5.000 anggota.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Fase 4 — Bulan 7-12</div><div class="tl-title">Konsolidasi & Penyaluran Perdana</div><div class="tl-desc">Bantuan bibit & pendidikan perdana, pembukaan cabang wilayah, target 10.000 anggota.</div></div>
+        </div>
+      </div></div>
+      <div class="ttd-section">
+        <div class="ttd-intro">Sukabumi, <span id="tgl-prop"></span></div>
+        <div class="ttd-grid-3">
+          <div class="ttd-box"><div class="ttd-label">Mengetahui</div><div class="ttd-jabatan">Ketua Poktan SADAR</div><div class="ttd-space"></div><div class="ttd-name">( .................. )</div></div>
+          <div class="ttd-box"><div class="ttd-label">Menyetujui</div><div class="ttd-jabatan">Pengawas BTN</div><div class="ttd-space"></div><div class="ttd-name">( Ustadz Kakat )</div></div>
+          <div class="ttd-box"><div class="ttd-label">Dibuat oleh</div><div class="ttd-jabatan">Pendiri BTN</div><div class="ttd-space"></div><div class="ttd-name">( M. Malvie Alkhudriyah )</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<!-- DOC 7: SOP -->
+<div class="page-doc" id="doc-sop">
+  <div class="back-bar">
+    <button class="back-btn" onclick="closeDoc()">← Kembali</button>
+    <div class="back-bar-title">SOP Keanggotaan & Cabang</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+  <div class="doc-inner">
+    <div class="kop"><div class="kop-gold"></div><div class="kop-inner"><div class="kop-emblem2">🌿</div><div class="kop-text"><h1>BAHULA TANI NUSANTARA</h1><p>No: BTN/SOP/2026/001</p></div></div><div class="kop-judul"><span>✦ SOP Keanggotaan & Sistem Cabang BTN ✦</span></div></div>
+    <div class="doc-body">
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">I</div> Tujuan SOP</div><div class="bab-isi"><p>SOP ini ditetapkan sebagai panduan baku operasional keanggotaan dan pembukaan cabang BTN di seluruh Jawa Barat, guna memastikan konsistensi, keadilan, dan akuntabilitas dalam setiap proses.</p></div></div>
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">II</div> Prosedur Penerimaan Anggota Baru</div>
+        <div class="bab-isi">
+          <div class="sop-steps">
+            <div class="sop-step"><div class="sop-step-num">1</div><div class="sop-step-body"><h4>Sosialisasi oleh Agen Lapangan</h4><p>Agen bersama RT/RW mengumpulkan warga dan memaparkan program BTN secara jujur dan bertanggung jawab.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">2</div><div class="sop-step-body"><h4>Pengisian Formulir Pendaftaran</h4><p>Calon anggota mengisi formulir pendaftaran (data diri, alamat, pekerjaan). Formulir simpel — bisa dibantu agen.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">3</div><div class="sop-step-body"><h4>Pembayaran Iuran</h4><p>Anggota membayar iuran minimum Rp 15.000 — seikhlasnya lebih. Pembayaran tunai kepada agen.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">4</div><div class="sop-step-body"><h4>Penyerahan Tanda Terima Sementara</h4><p>Agen menyerahkan tanda terima sementara bertanda tangan dan stempel BTN. Nomor anggota sementara dicatat.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">5</div><div class="sop-step-body"><h4>Rekap & Setor Dana</h4><p>Agen merekap data anggota dan menyetorkan dana ke Koordinator Wilayah maksimal 3 hari kerja.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">6</div><div class="sop-step-body"><h4>Input Data ke Sistem Pusat</h4><p>Koordinator menginput data anggota ke rekap pusat BTN dan menyetorkan dana setiap hari Jumat.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">7</div><div class="sop-step-body"><h4>Cetak & Distribusi KTA</h4><p>Setelah ≥500 anggota terdaftar, BTN mencetak KTA massal. KTA diserahkan ke RT/RW untuk distribusi ke anggota.</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">III</div> Sistem Pembukaan Cabang</div>
+        <div class="bab-isi">
+          <div class="info-box">🏘️ Syarat pembukaan cabang BTN di suatu kampung: <strong>minimal 100 anggota aktif</strong> yang telah membayar iuran dan terdaftar resmi di sistem pusat BTN.</div>
+          <div class="cabang-grid">
+            <div class="cabang-card"><div class="icon">📋</div><div class="title">Syarat Cabang</div><div class="desc">Min. 100 anggota aktif, ada pengurus lokal (min. 3 orang), dan memiliki tempat sekretariat.</div><div class="badge">Wajib</div></div>
+            <div class="cabang-card"><div class="icon">👥</div><div class="title">Pengurus Cabang</div><div class="desc">Ketua Cabang, Sekretaris, dan Bendahara — dipilih dari anggota aktif setempat.</div><div class="badge">3 Orang</div></div>
+            <div class="cabang-card"><div class="icon">🏦</div><div class="title">Kas BUMR</div><div class="desc">Saat 100 anggota tercapai, RT/RW menerima kas BUMR: Rp 500 × jumlah anggota.</div><div class="badge">Otomatis</div></div>
+            <div class="cabang-card"><div class="icon">📊</div><div class="title">Laporan Cabang</div><div class="desc">Cabang wajib laporan bulanan ke Koordinator Wilayah: data anggota, kas masuk, dan kegiatan.</div><div class="badge">Bulanan</div></div>
+          </div>
+
+          <div class="bab-title" style="margin-top:20px;"><div class="bab-num" style="background:linear-gradient(135deg,#1a5c1a,#3a9a3a);">→</div> Alur Pembukaan Cabang</div>
+          <div class="sop-steps">
+            <div class="sop-step"><div class="sop-step-num">1</div><div class="sop-step-body"><h4>Verifikasi 100 Anggota</h4><p>Koordinator Wilayah memverifikasi data bahwa kampung tersebut telah mencapai 100 anggota aktif.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">2</div><div class="sop-step-body"><h4>Usulan ke Pusat BTN</h4><p>Koordinator mengajukan usulan pembukaan cabang kepada Pusat BTN disertai data anggota dan calon pengurus.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">3</div><div class="sop-step-body"><h4>Persetujuan Pusat</h4><p>Pusat BTN menelaah usulan dan mengeluarkan Surat Keputusan Pembukaan Cabang dalam 7 hari kerja.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">4</div><div class="sop-step-body"><h4>Pelantikan Pengurus Cabang</h4><p>Pusat BTN atau Koordinator melantik pengurus cabang secara resmi — disaksikan RT/RW setempat.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">5</div><div class="sop-step-body"><h4>Penyerahan Kas BUMR</h4><p>Bersamaan dengan pelantikan, kas BUMR diserahkan secara resmi kepada RT/RW setempat.</p></div></div>
+            <div class="sop-step"><div class="sop-step-num">6</div><div class="sop-step-body"><h4>Operasional Cabang Dimulai</h4><p>Cabang aktif melayani anggota, menerima pengajuan bantuan, dan berkoordinasi dengan pusat BTN.</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">IV</div> Prosedur Pengajuan Bantuan Anggota</div>
+        <div class="bab-isi">
+          <div class="green-box">✅ Semua pengajuan bantuan dilakukan melalui <strong>formulir sederhana</strong> yang dapat diisi sendiri atau dibantu pengurus cabang setempat.</div>
+          <table class="data-table">
+            <thead><tr><th>Jenis Bantuan</th><th>Cara Pengajuan</th><th>Proses</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>Bantuan Bibit</td><td>Formulir pengajuan ke cabang/agen</td><td>7-14 hari</td><td>⭐ Tinggi</td></tr>
+              <tr><td>Bantuan Pendidikan</td><td>Formulir + dokumen siswa</td><td>14-21 hari</td><td>⭐ Tinggi</td></tr>
+              <tr><td>Pinjaman Modal</td><td>Formulir + proposal usaha simpel</td><td>14-30 hari</td><td>Medium</td></tr>
+              <tr><td>Modal Cuma-Cuma</td><td>Formulir + verifikasi kebutuhan</td><td>14-30 hari</td><td>Medium</td></tr>
+              <tr><td>Bantuan Kesehatan</td><td>Pengajuan darurat via WA/langsung</td><td>Sesegera mungkin</td><td>⭐⭐ Darurat</td></tr>
+              <tr><td>Bedah Rumah RTLH</td><td>Pengajuan RT/RW ke Koordinator</td><td>30-60 hari</td><td>Sesuai kas</td></tr>
+              <tr><td>Santunan Duka</td><td>Laporan via WA ke agen/koordinator</td><td>1-3 hari</td><td>⭐⭐ Prioritas</td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">⚠️ <strong>Prinsip utama:</strong> Seluruh bantuan disalurkan berdasarkan ketersediaan kas BTN dan prioritas kebutuhan. Program berjalan bertahap — dari yang paling ringan (bibit, pendidikan) menuju yang lebih besar (modal, RTLH).</div>
+        </div>
+      </div>
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">V</div> Sistem Pelaporan & Transparansi</div>
+        <div class="bab-isi">
+          <ul>
+            <li><strong style="color:var(--emas-muda)">Agen Lapangan</strong> — Rekap mingguan: jumlah anggota baru, dana diterima, dana disetorkan.</li>
+            <li><strong style="color:var(--emas-muda)">Koordinator Wilayah</strong> — Laporan mingguan tiap Jumat ke Pusat: rekap wilayah, setoran dana, perkembangan cabang.</li>
+            <li><strong style="color:var(--emas-muda)">Pengurus Cabang</strong> — Laporan bulanan: data anggota, kas cabang, pengajuan bantuan, kegiatan.</li>
+            <li><strong style="color:var(--emas-muda)">Pusat BTN</strong> — Laporan triwulan kepada Pembina & Pengawas: keuangan, program, perkembangan organisasi.</li>
+          </ul>
+          <div class="green-box" style="margin-top:14px;">💡 Konsep <strong>"dari kampung A untuk kampung B"</strong> — dana yang terkumpul dari wilayah yang kuat diputar untuk membantu wilayah yang baru berkembang. Subsidi silang antar wilayah berbasis data dan perhitungan matang.</div>
+        </div>
+      </div>
+
+      <div class="bab"><div class="bab-title"><div class="bab-num">VI</div> Ketentuan Penutup</div>
+        <div class="bab-isi">
+          <ol>
+            <li>SOP ini berlaku sejak tanggal ditetapkan dan dapat direvisi sesuai perkembangan organisasi.</li>
+            <li>Hal-hal yang belum diatur dalam SOP ini akan diselesaikan melalui musyawarah dan kebijakan Pusat BTN.</li>
+            <li>Seluruh anggota, agen, koordinator, dan pengurus cabang wajib memahami dan menjalankan SOP ini.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="ttd-section">
+        <div class="ttd-intro">Ditetapkan di Gunungguruh, <span id="tgl-sop"></span></div>
+        <div class="ttd-grid-3">
+          <div class="ttd-box"><div class="ttd-label">Mengetahui</div><div class="ttd-jabatan">Pengawas BTN</div><div class="ttd-space"></div><div class="ttd-name">( Ustadz Kakat )</div><div class="ttd-role">Pengawas</div></div>
+          <div class="ttd-box"><div class="ttd-label">Menetapkan</div><div class="ttd-jabatan">Pendiri BTN</div><div class="ttd-space"></div><div class="ttd-name">( M. Malvie Alkhudriyah )</div><div class="ttd-role">Pendiri / Pimpinan</div></div>
+          <div class="ttd-box"><div class="ttd-label">Mengetahui</div><div class="ttd-jabatan">Ketua Pengurus</div><div class="ttd-space"></div><div class="ttd-name">( Ustadz Komar )</div><div class="ttd-role">Ketua Pengurus BTN</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="doc-footer-bar"><div class="tag">"Jaga Ngariksa Leweung"</div><div class="wa">📱 0838-7166-6136</div></div>
+    <div class="gold-bot"></div>
+  </div>
+</div>
+
+<script>
+// ===== NAVIGASI =====
+function openDoc(id) {
+  document.getElementById('dashboard').style.display = 'none';
+  document.querySelectorAll('.page-doc').forEach(p => p.classList.remove('active'));
+  document.getElementById('doc-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function closeDoc() {
+  document.querySelectorAll('.page-doc').forEach(p => p.classList.remove('active'));
+  document.getElementById('dashboard').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ===== KTA =====
+function updateKTA() {
+  const nama = (document.getElementById('kta-nama').value || 'NAMA ANGGOTA').toUpperCase();
+  const wilayah = document.getElementById('kta-wilayah').value || 'Jawa Barat';
+  const nomor = (document.getElementById('kta-nomor').value || '00001').padStart(5,'0');
+  const tahun = document.getElementById('kta-tahun').value || '2026';
+  document.getElementById('kta-disp-nama').textContent = nama;
+  document.getElementById('kta-disp-wilayah').textContent = wilayah;
+  document.getElementById('kta-disp-nomor').textContent = `BTN · ${tahun} · ${nomor}`;
+}
+
+// ===== TANDA TERIMA WA =====
+function kirimTT() {
+  const nama = document.getElementById('tt-nama').value || '—';
+  const hp = document.getElementById('tt-hp').value || '—';
+  const desa = document.getElementById('tt-desa').value || '—';
+  const kab = document.getElementById('tt-kab').value || '—';
+  const nomor = (document.getElementById('tt-nomor').value || '00001').padStart(5,'0');
+  const iuran = parseInt(document.getElementById('tt-iuran').value || 15000).toLocaleString('id-ID');
+  const tgl = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  const text = `Assalamu'alaikum 🌿\n\n*TANDA TERIMA SEMENTARA*\n*Bahula Tani Nusantara*\n\nNo. Daftar : BTN-2026-${nomor}\nNama      : ${nama}\nNo. WA    : ${hp}\nWilayah   : ${desa}, ${kab}\nTanggal   : ${tgl}\nIuran     : Rp ${iuran}\n\n📌 KTA fisik menyusul via RT/RW setempat.\nJazakumullahu khairan 🤲`;
+  window.open('https://wa.me/6283871666136?text='+encodeURIComponent(text),'_blank');
+}
+
+// ===== FORMULIR WA =====
+function kirimFormulir() {
+  const nama = document.getElementById('f-nama').value||'—';
+  const hp = document.getElementById('f-hp').value||'—';
+  const kmp = document.getElementById('f-kmp').value||'—';
+  const desa = document.getElementById('f-desa').value||'—';
+  const kab = document.getElementById('f-kab').value||'—';
+  const iuran = parseInt(document.getElementById('f-iuran').value||15000).toLocaleString('id-ID');
+  const agen = document.getElementById('f-agen').value||'—';
+  const text = `Assalamu'alaikum 🌿\n\n*PENDAFTARAN ANGGOTA BTN*\n\n👤 Nama: ${nama}\n📱 WA: ${hp}\n📍 ${kmp}, ${desa}, ${kab}\n💳 Iuran: Rp ${iuran}\n🤝 Agen: ${agen}\n\nJazakumullahu khairan 🤲`;
+  window.open('https://wa.me/6283871666136?text='+encodeURIComponent(text),'_blank');
+}
+
+// ===== PERJANJIAN =====
+function syncPerjanjian() {
+  const nama = document.getElementById('p-nama').value || '________________';
+  const jenis = document.querySelector('input[name="jenis"]:checked');
+  const j = jenis ? jenis.value : 'Agen';
+  document.getElementById('ttd-p2').value = nama;
+  document.getElementById('ttd-jenis-label').textContent = j + ' BTN';
+  document.getElementById('ttd-role-label').textContent = j + ' Lapangan BTN';
+}
+
+// ===== INIT =====
+window.onload = function() {
+  const tgl = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  if(document.getElementById('tgl-prop')) document.getElementById('tgl-prop').textContent = tgl;
+  if(document.getElementById('tgl-sop')) document.getElementById('tgl-sop').textContent = tgl;
+  if(document.getElementById('f-tgl')) document.getElementById('f-tgl').value = new Date().toISOString().split('T')[0];
+};
+</script>
+</body>
+</html>
